@@ -449,67 +449,71 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 25.0, 0.0, 10.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              InkWell(
-                                splashColor: Colors.transparent,
-                                focusColor: Colors.transparent,
-                                hoverColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                onTap: () async {
-                                  try {
-                                    final bool authenticate =
-                                        await auth.authenticate(
-                                      localizedReason: 'Login',
-                                      authMessages: <AuthMessages>[
-                                        AndroidAuthMessages(
-                                          signInTitle: 'Action Required',
-                                          biometricHint:
-                                              'Tap the sensor when you are ready',
-                                        ),
-                                      ],
-                                    );
+                        if (canVerify)
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 25.0, 0.0, 10.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                InkWell(
+                                  splashColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onTap: () async {
+                                    try {
+                                      final bool authenticate =
+                                          await auth.authenticate(
+                                        localizedReason: 'Login',
+                                        authMessages: <AuthMessages>[
+                                          AndroidAuthMessages(
+                                            signInTitle: 'Action Required',
+                                            biometricHint:
+                                                'Tap the sensor when you are ready',
+                                          ),
+                                        ],
+                                      );
 
-                                    if (authenticate) {
-                                      _signIn(
-                                          username: '',
-                                          password: storedPassword!);
-                                    }
-                                  } on PlatformException {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          'Could not authenticate. Try logging in with password ',
-                                          style: AbuBankTheme.of(context)
-                                              .titleSmall
-                                              .override(
-                                                fontFamily: 'Poppins',
-                                                color: AbuBankTheme.of(context)
-                                                    .primary3,
-                                              ),
+                                      if (authenticate) {
+                                        _signIn(
+                                            username: '',
+                                            password: storedPassword!);
+                                      }
+                                    } on PlatformException {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Could not authenticate. Try logging in with password ',
+                                            style: AbuBankTheme.of(context)
+                                                .titleSmall
+                                                .override(
+                                                  fontFamily: 'Poppins',
+                                                  color:
+                                                      AbuBankTheme.of(context)
+                                                          .primary3,
+                                                ),
+                                          ),
+                                          duration:
+                                              Duration(milliseconds: 4000),
+                                          backgroundColor:
+                                              AbuBankTheme.of(context).green,
                                         ),
-                                        duration: Duration(milliseconds: 4000),
-                                        backgroundColor:
-                                            AbuBankTheme.of(context).green,
-                                      ),
-                                    );
-                                  }
-                                },
-                                child: Image.asset(
-                                  'assets/images/Fingerprint.png',
-                                  width: 60.0,
-                                  height: 60.0,
-                                  fit: BoxFit.cover,
+                                      );
+                                    }
+                                  },
+                                  child: Image.asset(
+                                    'assets/images/Fingerprint.png',
+                                    width: 60.0,
+                                    height: 60.0,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   ),

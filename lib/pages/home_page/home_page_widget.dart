@@ -1,17 +1,17 @@
-import '../../theme/aza_bank_theme.dart';
-import '../../theme/aza_bank_util.dart';
+import 'package:aza_bank/pages/home_page/account_details.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 import '/main.dart';
-import '/pages/accountandcard/accountandcard_widget.dart';
-import '/pages/beneficiary_page/beneficiary_page_widget.dart';
-import '/pages/makebillpayment/makebillpayment_widget.dart';
-import '/pages/mobileprepaid/mobileprepaid_widget.dart';
 import '/pages/notification/notification_widget.dart';
 import '/pages/saveonline/saveonline_widget.dart';
 import '/pages/transactionreport/transactionreport_widget.dart';
 import '/pages/withdraw_funds/withdraw_funds_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import '../../theme/aza_bank_theme.dart';
+import '../../theme/aza_bank_util.dart';
 import 'home_page_model.dart';
+
 export 'home_page_model.dart';
 
 class HomePageWidget extends StatefulWidget {
@@ -26,6 +26,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
+  bool showBalance = false;
 
   @override
   void initState() {
@@ -174,120 +175,22 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            20.0, 20.0, 20.0, 20.0),
-                        child: InkWell(
-                          splashColor: Colors.transparent,
-                          focusColor: Colors.transparent,
-                          hoverColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          onTap: () async {
-                            await Navigator.push(
-                              context,
-                              PageTransition(
-                                type: PageTransitionType.scale,
-                                alignment: Alignment.bottomCenter,
-                                duration: Duration(milliseconds: 300),
-                                reverseDuration: Duration(milliseconds: 300),
-                                child: AccountandcardWidget(),
-                              ),
+                      CarouselSlider(
+                        items: List.generate(5, (index) => index + 1).map(
+                          (i) {
+                            return AccountSummaryWidget(
+                              accountBalance: 209878.78,
+                              accountNumber: '0209849421',
+                              index: 0,
+                              totalAccounts: 1,
                             );
                           },
-                          child: Container(
-                            width: double.infinity,
-                            height: 221.0,
-                            decoration: BoxDecoration(
-                              color:
-                                  AbuBankTheme.of(context).secondaryBackground,
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: Image.asset(
-                                  'assets/images/card-bg.png',
-                                ).image,
-                              ),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  20.0, 20.0, 0.0, 20.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Text(
-                                        'John Smith',
-                                        style: AbuBankTheme.of(context)
-                                            .displaySmall
-                                            .override(
-                                              fontFamily: 'Poppins',
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 33.0, 0.0, 0.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Text(
-                                          'Amazon Platinium',
-                                          style: AbuBankTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                fontFamily: 'Poppins',
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 10.0, 0.0, 0.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Text(
-                                          ' 4756  **** **** 7645',
-                                          style: AbuBankTheme.of(context)
-                                              .titleSmall
-                                              .override(
-                                                fontFamily: 'Poppins',
-                                                color: Colors.white,
-                                              ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 10.0, 0.0, 0.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Text(
-                                          '\$3.469.52',
-                                          style: AbuBankTheme.of(context)
-                                              .headlineMedium
-                                              .override(
-                                                fontFamily: 'Poppins',
-                                                color: Colors.white,
-                                              ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                        ).toList(),
+                        options: CarouselOptions(
+                          enableInfiniteScroll: false,
+                          clipBehavior: Clip.none,
+                          height: 270,
+                          viewportFraction: 1,
                         ),
                       ),
                       Padding(
@@ -297,65 +200,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            InkWell(
-                              splashColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () async {
-                                await Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    type: PageTransitionType.scale,
-                                    alignment: Alignment.bottomCenter,
-                                    duration: Duration(milliseconds: 300),
-                                    reverseDuration:
-                                        Duration(milliseconds: 300),
-                                    child: AccountandcardWidget(),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                width: 100.0,
-                                height: 100.0,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFEEEEEE),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      blurRadius: 30.0,
-                                      color: Color(0x123629B7),
-                                      offset: Offset(0.0, -5.0),
-                                      spreadRadius: 30.0,
-                                    )
-                                  ],
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/images/account-icon.svg',
-                                      width: 28.0,
-                                      height: 28.0,
-                                      fit: BoxFit.scaleDown,
-                                    ),
-                                    Text(
-                                      'Account \n& Card',
-                                      textAlign: TextAlign.center,
-                                      style: AbuBankTheme.of(context)
-                                          .bodySmall
-                                          .override(
-                                            fontFamily: 'Poppins',
-                                            color: AbuBankTheme.of(context)
-                                                .secondaryText,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
                             InkWell(
                               splashColor: Colors.transparent,
                               focusColor: Colors.transparent,
@@ -475,134 +319,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            20.0, 10.0, 20.0, 20.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            InkWell(
-                              splashColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () async {
-                                await Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    type: PageTransitionType.scale,
-                                    alignment: Alignment.bottomCenter,
-                                    duration: Duration(milliseconds: 300),
-                                    reverseDuration:
-                                        Duration(milliseconds: 300),
-                                    child: MobileprepaidWidget(),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                width: 100.0,
-                                height: 100.0,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFEEEEEE),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      blurRadius: 30.0,
-                                      color: Color(0x123629B7),
-                                      offset: Offset(0.0, -5.0),
-                                      spreadRadius: 30.0,
-                                    )
-                                  ],
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/images/mobile-banking_2.svg',
-                                      width: 28.0,
-                                      height: 28.0,
-                                      fit: BoxFit.scaleDown,
-                                    ),
-                                    Text(
-                                      'Mobile\nprepaid',
-                                      textAlign: TextAlign.center,
-                                      style: AbuBankTheme.of(context)
-                                          .bodySmall
-                                          .override(
-                                            fontFamily: 'Poppins',
-                                            color: AbuBankTheme.of(context)
-                                                .secondaryText,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              splashColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () async {
-                                await Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    type: PageTransitionType.scale,
-                                    alignment: Alignment.bottomCenter,
-                                    duration: Duration(milliseconds: 300),
-                                    reverseDuration:
-                                        Duration(milliseconds: 300),
-                                    child: MakebillpaymentWidget(),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                width: 100.0,
-                                height: 100.0,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFEEEEEE),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      blurRadius: 30.0,
-                                      color: Color(0x123629B7),
-                                      offset: Offset(0.0, -5.0),
-                                      spreadRadius: 30.0,
-                                    )
-                                  ],
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/images/receipt-list-43_1.svg',
-                                      width: 28.0,
-                                      height: 28.0,
-                                      fit: BoxFit.scaleDown,
-                                    ),
-                                    Text(
-                                      'Pay the \nbill',
-                                      textAlign: TextAlign.center,
-                                      style: AbuBankTheme.of(context)
-                                          .bodySmall
-                                          .override(
-                                            fontFamily: 'Poppins',
-                                            color: AbuBankTheme.of(context)
-                                                .secondaryText,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
                             InkWell(
                               splashColor: Colors.transparent,
                               focusColor: Colors.transparent,
@@ -648,7 +364,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                       fit: BoxFit.scaleDown,
                                     ),
                                     Text(
-                                      'Save\nonline',
+                                      'Deposit',
                                       textAlign: TextAlign.center,
                                       style: AbuBankTheme.of(context)
                                           .bodySmall
@@ -672,65 +388,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            InkWell(
-                              splashColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () async {
-                                await Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    type: PageTransitionType.scale,
-                                    alignment: Alignment.bottomCenter,
-                                    duration: Duration(milliseconds: 300),
-                                    reverseDuration:
-                                        Duration(milliseconds: 300),
-                                    child: AccountandcardWidget(),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                width: 100.0,
-                                height: 100.0,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFEEEEEE),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      blurRadius: 30.0,
-                                      color: Color(0x123629B7),
-                                      offset: Offset(0.0, -5.0),
-                                      spreadRadius: 30.0,
-                                    )
-                                  ],
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/images/credit-card_2.svg',
-                                      width: 28.0,
-                                      height: 28.0,
-                                      fit: BoxFit.scaleDown,
-                                    ),
-                                    Text(
-                                      'Credit\ncard',
-                                      textAlign: TextAlign.center,
-                                      style: AbuBankTheme.of(context)
-                                          .bodySmall
-                                          .override(
-                                            fontFamily: 'Poppins',
-                                            color: AbuBankTheme.of(context)
-                                                .secondaryText,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
                             InkWell(
                               splashColor: Colors.transparent,
                               focusColor: Colors.transparent,
@@ -776,66 +433,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                       fit: BoxFit.scaleDown,
                                     ),
                                     Text(
-                                      'Transaction\nreport',
-                                      textAlign: TextAlign.center,
-                                      style: AbuBankTheme.of(context)
-                                          .bodySmall
-                                          .override(
-                                            fontFamily: 'Poppins',
-                                            color: AbuBankTheme.of(context)
-                                                .secondaryText,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              splashColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () async {
-                                await Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    type: PageTransitionType.scale,
-                                    alignment: Alignment.bottomCenter,
-                                    duration: Duration(milliseconds: 300),
-                                    reverseDuration:
-                                        Duration(milliseconds: 300),
-                                    child: BeneficiaryPageWidget(),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                width: 100.0,
-                                height: 100.0,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFEEEEEE),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      blurRadius: 30.0,
-                                      color: Color(0x123629B7),
-                                      offset: Offset(0.0, -5.0),
-                                      spreadRadius: 30.0,
-                                    )
-                                  ],
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/images/contact-icon.svg',
-                                      width: 28.0,
-                                      height: 28.0,
-                                      fit: BoxFit.scaleDown,
-                                    ),
-                                    Text(
-                                      'Manage\nBeneficiary',
+                                      'Transaction\nhistory',
                                       textAlign: TextAlign.center,
                                       style: AbuBankTheme.of(context)
                                           .bodySmall

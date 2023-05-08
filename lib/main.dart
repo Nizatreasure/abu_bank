@@ -1,10 +1,14 @@
+import 'package:aza_bank/theme/aza_bank_util.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+
+import 'index.dart';
 import 'theme/aza_bank_theme.dart';
 import 'theme/internationalization.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-import 'index.dart';
+
+final numberFormat = NumberFormat(',##0.00');
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,7 +43,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'AzaBank',
+      title: 'Abu Bank',
       localizationsDelegates: [
         FFLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,
@@ -85,7 +89,7 @@ class _NavBarPageState extends State<NavBarPage> {
     final tabs = {
       'HomePage': HomePageWidget(),
       'TransferFunds': TransferFundsWidget(),
-      'SearchPage': SearchPageWidget(),
+      'WithdrawPage': SearchPageWidget(),
       'Settingspage': SettingspageWidget(),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
@@ -120,8 +124,8 @@ class _NavBarPageState extends State<NavBarPage> {
             iconSize: 24.0,
           ),
           GButton(
-            icon: Icons.search_rounded,
-            text: 'Search',
+            icon: CupertinoIcons.arrow_down_left,
+            text: 'Withdraw',
             iconSize: 24.0,
           ),
           GButton(
