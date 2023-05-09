@@ -83,13 +83,20 @@ class _AccountSummaryWidgetState extends State<AccountSummaryWidget> {
                                       ),
                             ),
                           ),
-                          Container(
-                            margin: const EdgeInsets.only(right: 20.0),
-                            padding: EdgeInsets.fromLTRB(10, 3, 10, 3),
-                            child: Icon(
-                              showBalance
-                                  ? CupertinoIcons.eye
-                                  : CupertinoIcons.eye_slash,
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                showBalance = !showBalance;
+                              });
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(right: 20.0),
+                              padding: EdgeInsets.fromLTRB(10, 3, 10, 3),
+                              child: Icon(
+                                showBalance
+                                    ? CupertinoIcons.eye
+                                    : CupertinoIcons.eye_slash,
+                              ),
                             ),
                           ),
                         ],
@@ -103,11 +110,13 @@ class _AccountSummaryWidgetState extends State<AccountSummaryWidget> {
                           child: Text.rich(
                             TextSpan(
                                 text: '\u20A6 ',
-                                style: TextStyle(fontFamily: 'Ariel'),
+                                style: TextStyle(fontFamily: 'Roboto'),
                                 children: [
                                   TextSpan(
-                                    text: numberFormat
-                                        .format(widget.accountBalance),
+                                    text: showBalance
+                                        ? numberFormat
+                                            .format(widget.accountBalance)
+                                        : '********',
                                   ),
                                 ]),
                             style:
