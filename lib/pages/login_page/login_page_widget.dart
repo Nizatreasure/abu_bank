@@ -1,8 +1,13 @@
+import 'package:abu_bank/helper/constants.dart';
+import 'package:abu_bank/models/login_model.dart';
+import 'package:abu_bank/providers/account_data_provider.dart';
+import 'package:abu_bank/requests/authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:local_auth_android/local_auth_android.dart';
+import 'package:provider/provider.dart';
 
 import '/main.dart';
 import '/pages/forgot_password/forgot_password_widget.dart';
@@ -28,7 +33,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
   final _unfocusNode = FocusNode();
   bool canVerify = false;
   String? storedPassword = '';
-  String? username = '';
+  String? email = '';
+  bool loading = false;
   final LocalAuthentication auth = LocalAuthentication();
   final storage = const FlutterSecureStorage();
 
@@ -52,15 +58,15 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
 
   checkAvailability() async {
     bool passwordExists = await storage.containsKey(key: 'password');
-    bool usernameExists = await storage.containsKey(key: 'username');
+    bool emailExists = await storage.containsKey(key: 'email');
     if (passwordExists) storedPassword = await storage.read(key: 'password');
-    if (usernameExists) {
-      username = await storage.read(key: 'username');
-      _model.textController1.text = username ?? '';
+    if (emailExists) {
+      email = await storage.read(key: 'email');
+      _model.textController1.text = email ?? '';
     }
     bool isAble = await auth.canCheckBiometrics;
 
-    canVerify = passwordExists && usernameExists && isAble;
+    canVerify = passwordExists && emailExists && isAble;
     setState(() {});
   }
 
@@ -201,7 +207,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                       controller: _model.textController1,
                                       obscureText: false,
                                       decoration: InputDecoration(
-                                        labelText: 'Username',
+                                        labelText: 'Email',
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
                                             color: Color(0x00000000),
@@ -381,7 +387,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                   hoverColor: Colors.transparent,
                                   highlightColor: Colors.transparent,
                                   onTap: () async {
-                                    await Navigator.push(
+                                    Navigator.push(
                                       context,
                                       PageTransition(
                                         type: PageTransitionType.scale,
@@ -415,13 +421,13 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                     8.0, 0.0, 0.0, 0.0),
                                 child: FFButtonWidget(
                                   onPressed: () async {
-                                    _signIn(
-                                      username:
-                                          _model.textController1.text.trim(),
+                                    await _signIn(
+                                      email: _model.textController1.text.trim(),
                                       password:
                                           _model.textController2.text.trim(),
                                     );
                                   },
+                                  fingerprintLoading: loading,
                                   text: 'Sign in',
                                   options: FFButtonOptions(
                                     width: 130.0,
@@ -463,6 +469,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                   hoverColor: Colors.transparent,
                                   highlightColor: Colors.transparent,
                                   onTap: () async {
+                                    if (loading) return;
                                     try {
                                       final bool authenticate =
                                           await auth.authenticate(
@@ -477,9 +484,14 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                       );
 
                                       if (authenticate) {
-                                        _signIn(
-                                            username: '',
+                                        setState(() {
+                                          loading = true;
+                                        });
+                                        await _signIn(
+                                            email: email!,
                                             password: storedPassword!);
+                                        loading = false;
+                                        if (mounted) setState(() {});
                                       }
                                     } on PlatformException {
                                       ScaffoldMessenger.of(context)
@@ -526,29 +538,43 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
     );
   }
 
-  void _signIn({required String username, required String password}) async {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Login Successful ',
-          style: AbuBankTheme.of(context).titleSmall.override(
-                fontFamily: 'Poppins',
-                color: AbuBankTheme.of(context).primary3,
-              ),
+  Future<void> _signIn(
+      {required String email, required String password}) async {
+    if (email.isEmpty || password.isEmpty) return;
+
+    final response =
+        await Authentication.login(email: email, password: password);
+    if (response['status']) {
+      await storage.write(key: 'password', value: password);
+      await storage.write(key: 'email', value: email);
+      userData = response['data'] as LoginModel;
+      Provider.of<AccountDataProvider>(context, listen: false)
+          .getAccountDetails();
+      Navigator.pushAndRemoveUntil(
+        context,
+        PageTransition(
+          type: PageTransitionType.scale,
+          alignment: Alignment.bottomCenter,
+          duration: Duration(milliseconds: 300),
+          reverseDuration: Duration(milliseconds: 300),
+          child: NavBarPage(initialPage: 'HomePage'),
         ),
-        duration: Duration(milliseconds: 4000),
-        backgroundColor: AbuBankTheme.of(context).green,
-      ),
-    );
-    await Navigator.push(
-      context,
-      PageTransition(
-        type: PageTransitionType.scale,
-        alignment: Alignment.bottomCenter,
-        duration: Duration(milliseconds: 300),
-        reverseDuration: Duration(milliseconds: 300),
-        child: NavBarPage(initialPage: 'HomePage'),
-      ),
-    );
+        (route) => false,
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            response['message'],
+            style: AbuBankTheme.of(context).titleSmall.override(
+                  fontFamily: 'Poppins',
+                  color: AbuBankTheme.of(context).primary3,
+                ),
+          ),
+          duration: Duration(milliseconds: 4000),
+          backgroundColor: AbuBankTheme.of(context).error,
+        ),
+      );
+    }
   }
 }

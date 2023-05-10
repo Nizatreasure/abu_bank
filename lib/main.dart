@@ -1,14 +1,17 @@
+import 'package:abu_bank/providers/account_data_provider.dart';
 import 'package:abu_bank/theme/abu_bank_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:provider/provider.dart';
 
 import 'index.dart';
 import 'theme/abu_bank_theme.dart';
 import 'theme/internationalization.dart';
 
 final numberFormat = NumberFormat(',##0.00');
+String boxName = 'abubox';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,22 +45,27 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Abu Bank',
-      localizationsDelegates: [
-        FFLocalizationsDelegate(),
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AccountDataProvider()),
       ],
-      locale: _locale,
-      supportedLocales: const [
-        Locale('en'),
-      ],
-      theme: ThemeData(brightness: Brightness.light),
-      darkTheme: ThemeData(brightness: Brightness.dark),
-      themeMode: _themeMode,
-      home: WelcomePageWidget(),
+      child: MaterialApp(
+        title: 'Abu Bank',
+        localizationsDelegates: [
+          FFLocalizationsDelegate(),
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        locale: _locale,
+        supportedLocales: const [
+          Locale('en'),
+        ],
+        theme: ThemeData(brightness: Brightness.light),
+        darkTheme: ThemeData(brightness: Brightness.dark),
+        themeMode: _themeMode,
+        home: WelcomePageWidget(),
+      ),
     );
   }
 }

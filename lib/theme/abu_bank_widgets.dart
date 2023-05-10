@@ -1,6 +1,6 @@
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class FFButtonOptions {
   const FFButtonOptions({
@@ -52,9 +52,10 @@ class FFButtonWidget extends StatefulWidget {
     this.icon,
     this.iconData,
     required this.options,
+    this.fingerprintLoading = false,
     this.showLoadingIndicator = true,
   }) : super(key: key);
-
+  final bool fingerprintLoading;
   final String text;
   final Widget? icon;
   final IconData? iconData;
@@ -71,7 +72,7 @@ class _FFButtonWidgetState extends State<FFButtonWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Widget textWidget = loading
+    Widget textWidget = loading || widget.fingerprintLoading
         ? Center(
             child: Container(
               width: 23,

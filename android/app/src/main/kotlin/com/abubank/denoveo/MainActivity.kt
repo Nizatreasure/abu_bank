@@ -1,0 +1,7 @@
+package com.abubank.denoveo
+
+import io.flutter.embedding.android.FlutterFragmentActivity
+
+class MainActivity : FlutterFragmentActivity() {
+    // ...
+}

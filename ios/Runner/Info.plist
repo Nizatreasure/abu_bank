@@ -28,6 +28,8 @@
 		<string>$(FLUTTER_BUILD_NUMBER)</string>
 		<key>LSRequiresIPhoneOS</key>
 		<true/>
+		<key>NSFaceIDUsageDescription</key>
+		<string>Abu Bank needs to login using face ID</string>
 
 
 
