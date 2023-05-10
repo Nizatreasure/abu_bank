@@ -1,12 +1,15 @@
-import '/components/choose_accoun_section/choose_accoun_section_widget.dart';
+import 'package:aza_bank/helper/account_container.dart';
+import 'package:aza_bank/helper/thousand_separator.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../helper/prefix_add.dart';
 import '../../theme/aza_bank_theme.dart';
 import '../../theme/aza_bank_util.dart';
 import '../../theme/aza_bank_widgets.dart';
-import '/main.dart';
-import '/pages/comfirm_tranfer/comfirm_tranfer_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'withdraw_funds_model.dart';
+
 export 'withdraw_funds_model.dart';
 
 class WithdrawFundsWidget extends StatefulWidget {
@@ -20,7 +23,6 @@ class _WithdrawFundsWidgetState extends State<WithdrawFundsWidget> {
   late WithdrawFundsModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final _unfocusNode = FocusNode();
 
   @override
   void initState() {
@@ -35,20 +37,18 @@ class _WithdrawFundsWidgetState extends State<WithdrawFundsWidget> {
   void dispose() {
     _model.dispose();
 
-    _unfocusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
-      child: Scaffold(
-        key: scaffoldKey,
-        backgroundColor: AbuBankTheme.of(context).secondaryBackground,
-        body: SafeArea(
-          child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
+    return Scaffold(
+      key: scaffoldKey,
+      backgroundColor: AbuBankTheme.of(context).secondaryBackground,
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
+          child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -71,7 +71,7 @@ class _WithdrawFundsWidgetState extends State<WithdrawFundsWidget> {
                                 builder: (alertDialogContext) {
                                   return AlertDialog(
                                     title: Text('Head\'s Up'),
-                                    content: Text('Cancal this transaction'),
+                                    content: Text('Cancel this transaction'),
                                     actions: [
                                       TextButton(
                                         onPressed: () => Navigator.pop(
@@ -89,16 +89,7 @@ class _WithdrawFundsWidgetState extends State<WithdrawFundsWidget> {
                               ) ??
                               false;
                           if (confirmDialogResponse) {
-                            await Navigator.push(
-                              context,
-                              PageTransition(
-                                type: PageTransitionType.scale,
-                                alignment: Alignment.bottomCenter,
-                                duration: Duration(milliseconds: 300),
-                                reverseDuration: Duration(milliseconds: 300),
-                                child: NavBarPage(initialPage: 'TransferFunds'),
-                              ),
-                            );
+                            Navigator.pop(context);
                           }
                         },
                         child: Icon(
@@ -141,107 +132,7 @@ class _WithdrawFundsWidgetState extends State<WithdrawFundsWidget> {
                           ),
                         ],
                       ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            10.0, 50.0, 10.0, 0.0),
-                        child: InkWell(
-                          splashColor: Colors.transparent,
-                          focusColor: Colors.transparent,
-                          hoverColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          onTap: () async {
-                            await showModalBottomSheet(
-                              isScrollControlled: true,
-                              backgroundColor: Colors.transparent,
-                              barrierColor: Color(0x00000000),
-                              context: context,
-                              builder: (bottomSheetContext) {
-                                return GestureDetector(
-                                  onTap: () => FocusScope.of(context)
-                                      .requestFocus(_unfocusNode),
-                                  child: Padding(
-                                    padding: MediaQuery.of(bottomSheetContext)
-                                        .viewInsets,
-                                    child: Container(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.65,
-                                      child: ChooseAccounSectionWidget(),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ).then((value) => setState(() {}));
-                          },
-                          child: Container(
-                            width: 332.0,
-                            height: 55.0,
-                            decoration: BoxDecoration(
-                              color: Color(0x12000000),
-                              borderRadius: BorderRadius.circular(5.0),
-                              border: Border.all(
-                                color: AbuBankTheme.of(context).orange,
-                                width: 2.0,
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      15.0, 0.0, 0.0, 0.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'VISA **** **** **** 1234',
-                                        style: AbuBankTheme.of(context)
-                                            .bodyMedium
-                                            .override(
-                                              fontFamily: 'Poppins',
-                                              color: AbuBankTheme.of(context)
-                                                  .primaryText,
-                                            ),
-                                      ),
-                                      Text(
-                                        'Available balance : 10,000\$',
-                                        style: AbuBankTheme.of(context)
-                                            .bodyMedium
-                                            .override(
-                                              fontFamily: 'Poppins',
-                                              color: AbuBankTheme.of(context)
-                                                  .orange,
-                                              fontSize: 12.0,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 10.0, 0.0),
-                                      child: Icon(
-                                        Icons.attach_money_rounded,
-                                        color: AbuBankTheme.of(context)
-                                            .primaryText,
-                                        size: 24.0,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                      AccountContainer(),
                       Padding(
                         padding:
                             EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
@@ -266,8 +157,12 @@ class _WithdrawFundsWidgetState extends State<WithdrawFundsWidget> {
                                 child: TextFormField(
                                   controller: _model.textController1,
                                   obscureText: false,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                    ThousandsSeparatorInputFormatter(),
+                                  ],
                                   decoration: InputDecoration(
-                                    labelText: 'Phone Number',
+                                    labelText: 'Account Number',
                                     enabledBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
                                         color: Color(0x00000000),
@@ -348,6 +243,11 @@ class _WithdrawFundsWidgetState extends State<WithdrawFundsWidget> {
                                 child: TextFormField(
                                   controller: _model.textController2,
                                   obscureText: false,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                    ThousandsSeparatorInputFormatter(),
+                                    PrefixAdd('\u20A6'),
+                                  ],
                                   decoration: InputDecoration(
                                     labelText: 'Enter Amount to Send',
                                     enabledBorder: UnderlineInputBorder(
@@ -419,7 +319,7 @@ class _WithdrawFundsWidgetState extends State<WithdrawFundsWidget> {
                                 alignment: Alignment.bottomCenter,
                                 duration: Duration(milliseconds: 300),
                                 reverseDuration: Duration(milliseconds: 300),
-                                child: ComfirmTranferWidget(),
+                                child: Container(),
                               ),
                             );
                           },

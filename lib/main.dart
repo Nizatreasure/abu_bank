@@ -89,7 +89,7 @@ class _NavBarPageState extends State<NavBarPage> {
     final tabs = {
       'HomePage': HomePageWidget(),
       'TransferFunds': TransferFundsWidget(),
-      'WithdrawPage': SearchPageWidget(),
+      'WithdrawPage': WithdrawFundsWidget(),
       'Settingspage': SettingspageWidget(),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);

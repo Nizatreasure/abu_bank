@@ -1,13 +1,30 @@
+import 'package:aza_bank/main.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import '/pages/transfer_suscessful/transfer_suscessful_widget.dart';
 import '../../theme/aza_bank_theme.dart';
 import '../../theme/aza_bank_util.dart';
 import '../../theme/aza_bank_widgets.dart';
-import '/pages/transfer_suscessful/transfer_suscessful_widget.dart';
-import 'package:flutter/material.dart';
 import 'comfirm_tranfer_section_model.dart';
+
 export 'comfirm_tranfer_section_model.dart';
 
 class ComfirmTranferSectionWidget extends StatefulWidget {
-  const ComfirmTranferSectionWidget({Key? key}) : super(key: key);
+  final String beneficiaryName;
+  final String beneficiaryAccount;
+  final String bankName;
+  final String accountNumber;
+  final String amount;
+
+  const ComfirmTranferSectionWidget({
+    Key? key,
+    required this.beneficiaryName,
+    required this.beneficiaryAccount,
+    required this.bankName,
+    required this.accountNumber,
+    required this.amount,
+  }) : super(key: key);
 
   @override
   _ComfirmTranferSectionWidgetState createState() =>
@@ -132,7 +149,7 @@ class _ComfirmTranferSectionWidgetState
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Text(
-                        '809678856757',
+                        widget.accountNumber,
                         style: AbuBankTheme.of(context).bodyMedium.override(
                               fontFamily: 'Poppins',
                               color: AbuBankTheme.of(context).secondaryText,
@@ -169,7 +186,7 @@ class _ComfirmTranferSectionWidgetState
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Text(
-                        'Adonis Justin Mark',
+                        widget.beneficiaryName,
                         style: AbuBankTheme.of(context).bodyMedium.override(
                               fontFamily: 'Poppins',
                               color: AbuBankTheme.of(context).secondaryText,
@@ -206,7 +223,7 @@ class _ComfirmTranferSectionWidgetState
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Text(
-                        '78687868686',
+                        widget.beneficiaryAccount,
                         style: AbuBankTheme.of(context).bodyMedium.override(
                               fontFamily: 'Poppins',
                               color: AbuBankTheme.of(context).secondaryText,
@@ -243,7 +260,7 @@ class _ComfirmTranferSectionWidgetState
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Text(
-                        'GTBank ',
+                        widget.bankName,
                         style: AbuBankTheme.of(context).bodyMedium.override(
                               fontFamily: 'Poppins',
                               color: AbuBankTheme.of(context).secondaryText,
@@ -280,49 +297,11 @@ class _ComfirmTranferSectionWidgetState
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Text(
-                        '\$ 5000',
+                        '\u20A6 ${numberFormat.format(double.parse(widget.amount.toString()))}',
                         style: AbuBankTheme.of(context).bodyMedium.override(
-                              fontFamily: 'Poppins',
+                              fontFamily: 'Roboto',
                               color: AbuBankTheme.of(context).secondaryText,
                               fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Divider(
-              indent: 20.0,
-              endIndent: 20.0,
-            ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 0.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Text(
-                        'Note',
-                        style: AbuBankTheme.of(context).bodySmall.override(
-                              fontFamily: 'Poppins',
-                              color: AbuBankTheme.of(context).secondaryText,
-                            ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Text(
-                        'From Jimy',
-                        style: AbuBankTheme.of(context).bodyMedium.override(
-                              fontFamily: 'Poppins',
-                              color: AbuBankTheme.of(context).secondaryText,
-                              fontWeight: FontWeight.w500,
                             ),
                       ),
                     ],
@@ -345,7 +324,7 @@ class _ComfirmTranferSectionWidgetState
                         EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 20.0),
                     child: Container(
                       width: 320.0,
-                      height: 45.0,
+                      height: 50.0,
                       decoration: BoxDecoration(
                         color: Color(0x12000000),
                         borderRadius: BorderRadius.circular(5.0),
@@ -360,8 +339,13 @@ class _ComfirmTranferSectionWidgetState
                         child: TextFormField(
                           controller: _model.textController,
                           obscureText: false,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
                           decoration: InputDecoration(
                             labelText: 'Enter Your 4 Digit Pin',
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 0, vertical: 8),
                             enabledBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
                                 color: Color(0x00000000),
