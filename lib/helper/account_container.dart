@@ -1,11 +1,33 @@
+import 'package:abu_bank/helper/mask_string.dart';
+import 'package:abu_bank/models/account_model.dart';
+import 'package:abu_bank/providers/account_data_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../components/choose_accoun_section/choose_accoun_section_widget.dart';
 import '../main.dart';
 import '../theme/abu_bank_theme.dart';
 
-class AccountContainer extends StatelessWidget {
+class AccountContainer extends StatefulWidget {
   const AccountContainer({Key? key}) : super(key: key);
+
+  @override
+  State<AccountContainer> createState() => _AccountContainerState();
+}
+
+class _AccountContainerState extends State<AccountContainer> {
+  late AccountModel selectedAccount;
+  late AccountDataProvider accountDataProvider;
+
+  @override
+  void initState() {
+    accountDataProvider =
+        Provider.of<AccountDataProvider>(context, listen: false);
+
+    selectedAccount = accountDataProvider.accounts![0];
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +39,7 @@ class AccountContainer extends StatelessWidget {
         hoverColor: Colors.transparent,
         highlightColor: Colors.transparent,
         onTap: () async {
-          await showModalBottomSheet(
+          AccountModel? accountModel = await showModalBottomSheet(
             isScrollControlled: true,
             backgroundColor: Colors.transparent,
             barrierColor: Color(0x00000000),
@@ -34,6 +56,13 @@ class AccountContainer extends StatelessWidget {
               );
             },
           );
+
+          if (accountModel == null) return;
+          selectedAccount = accountModel;
+
+          if (mounted) {
+            setState(() {});
+          }
           // .then((value) => setState(() {}));
         },
         child: Container(
@@ -59,14 +88,15 @@ class AccountContainer extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '0209849421',
+                      maskString(selectedAccount.accountNumber,
+                          visibleDigits: 5),
                       style: AbuBankTheme.of(context).bodyMedium.override(
                             fontFamily: 'Poppins',
                             color: AbuBankTheme.of(context).primaryText,
                           ),
                     ),
                     Text(
-                      'Available balance: \u20A6 ${numberFormat.format(1000.90)}',
+                      'Available balance: \u20A6 ${numberFormat.format(double.parse(selectedAccount.balance))}',
                       style: AbuBankTheme.of(context).bodyMedium.override(
                             fontFamily: 'Roboto',
                             color: AbuBankTheme.of(context).orange,

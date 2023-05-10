@@ -1,5 +1,8 @@
+import 'package:abu_bank/helper/mask_string.dart';
 import 'package:abu_bank/main.dart';
+import 'package:abu_bank/providers/account_data_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../theme/abu_bank_theme.dart';
 import '../../theme/abu_bank_util.dart';
@@ -107,133 +110,147 @@ class _ChooseAccounSectionWidgetState extends State<ChooseAccounSectionWidget> {
                 indent: 0.0,
                 endIndent: 0.0,
               ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: List.generate(3, (index) => index).map(
-                  (e) {
-                    return Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(
-                          10.0, 10.0, 10.0, 10.0),
-                      child: InkWell(
-                        splashColor: Colors.transparent,
-                        focusColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        onTap: () async {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          height: 80.0,
-                          decoration: BoxDecoration(
-                            color: Color(0xFFEEEEEE),
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 30.0,
-                                color: Color(0x123629B7),
-                                offset: Offset(0.0, 4.0),
-                                spreadRadius: 30.0,
-                              )
-                            ],
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                5.0, 5.0, 5.0, 5.0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      10.0, 0.0, 10.0, 0.0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
+              Consumer<AccountDataProvider>(
+                builder: (context, accountDataProvider, child) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: List.generate(
+                        accountDataProvider.accounts!.length,
+                        (index) => index).map(
+                      (e) {
+                        return Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              10.0, 10.0, 10.0, 10.0),
+                          child: InkWell(
+                            splashColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            onTap: () async {
+                              Navigator.pop(
+                                  context, accountDataProvider.accounts![e]);
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              height: 80.0,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFEEEEEE),
+                                boxShadow: [
+                                  BoxShadow(
+                                    blurRadius: 30.0,
+                                    color: Color(0x123629B7),
+                                    offset: Offset(0.0, 4.0),
+                                    spreadRadius: 30.0,
+                                  )
+                                ],
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    5.0, 5.0, 5.0, 5.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          10.0, 0.0, 10.0, 0.0),
+                                      child: Row(
                                         mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
-                                            'Account ${e + 1}',
-                                            style: AbuBankTheme.of(context)
-                                                .titleMedium
-                                                .override(
-                                                  fontFamily: 'Poppins',
-                                                  color: Color(0xFF0C0F10),
-                                                  fontWeight: FontWeight.w600,
-                                                ),
+                                          Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Text(
+                                                'Account ${e + 1}',
+                                                style: AbuBankTheme.of(context)
+                                                    .titleMedium
+                                                    .override(
+                                                      fontFamily: 'Poppins',
+                                                      color: Color(0xFF0C0F10),
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
+                                          Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                maskString(
+                                                    accountDataProvider
+                                                        .accounts![e]
+                                                        .accountNumber,
+                                                    visibleDigits: 5),
+                                                style: AbuBankTheme.of(context)
+                                                    .titleMedium
+                                                    .override(
+                                                      fontFamily: 'Poppins',
+                                                      color: Color(0xFF0C0F10),
+                                                    ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
-                                      Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            '0209849421',
-                                            style: AbuBankTheme.of(context)
-                                                .titleMedium
-                                                .override(
-                                                  fontFamily: 'Poppins',
-                                                  color: Color(0xFF0C0F10),
-                                                ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      10.0, 0.0, 10.0, 0.0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          10.0, 0.0, 10.0, 0.0),
+                                      child: Row(
                                         mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
-                                            'Avalable balance',
-                                            style: AbuBankTheme.of(context)
-                                                .titleSmall
-                                                .override(
-                                                  fontFamily: 'Poppins',
-                                                  color: Color(0xFF0C0F10),
-                                                ),
+                                          Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Text(
+                                                'Avalable balance',
+                                                style: AbuBankTheme.of(context)
+                                                    .titleSmall
+                                                    .override(
+                                                      fontFamily: 'Poppins',
+                                                      color: Color(0xFF0C0F10),
+                                                    ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                      Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Text(
-                                            '\u20A6 ${numberFormat.format(2000.98)}',
-                                            style: AbuBankTheme.of(context)
-                                                .titleMedium
-                                                .override(
-                                                  fontFamily: 'Roboto',
-                                                  color:
-                                                      AbuBankTheme.of(context)
+                                          Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Text(
+                                                '\u20A6 ${numberFormat.format(double.parse(accountDataProvider.accounts![e].balance))}',
+                                                style: AbuBankTheme.of(context)
+                                                    .titleMedium
+                                                    .override(
+                                                      fontFamily: 'Roboto',
+                                                      color: AbuBankTheme.of(
+                                                              context)
                                                           .primary,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    );
-                  },
-                ).toList(),
+                        );
+                      },
+                    ).toList(),
+                  );
+                },
               )
             ],
           ),

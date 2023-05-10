@@ -1,6 +1,4 @@
 import 'package:abu_bank/helper/constants.dart';
-import 'package:abu_bank/helper/mask_string.dart';
-import 'package:abu_bank/pages/home_page/account_details.dart';
 import 'package:abu_bank/providers/account_data_provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +10,10 @@ import '/pages/notification/notification_widget.dart';
 import '/pages/saveonline/saveonline_widget.dart';
 import '/pages/transactionreport/transactionreport_widget.dart';
 import '/pages/withdraw_funds/withdraw_funds_widget.dart';
+import '../../helper/mask_string.dart';
 import '../../theme/abu_bank_theme.dart';
 import '../../theme/abu_bank_util.dart';
+import 'account_details.dart';
 import 'home_page_model.dart';
 
 export 'home_page_model.dart';
@@ -56,7 +56,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           Expanded(
             child: Container(
               width: double.infinity,
-              height: 100.0,
               decoration: BoxDecoration(
                 color: AbuBankTheme.of(context).primary,
               ),
@@ -160,7 +159,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             flex: 5,
             child: Container(
               width: double.infinity,
-              height: 100.0,
               decoration: BoxDecoration(
                 color: AbuBankTheme.of(context).secondaryBackground,
                 borderRadius: BorderRadius.only(
@@ -170,330 +168,372 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   topRight: Radius.circular(30.0),
                 ),
               ),
-              child: RefreshIndicator(
-                onRefresh: () async {
-                  await Provider.of<AccountDataProvider>(context, listen: false)
-                      .getAccountDetails();
-                },
-                child: SingleChildScrollView(
-                  primary: false,
-                  physics: AlwaysScrollableScrollPhysics(),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Consumer<AccountDataProvider>(
-                        builder: (context, accounts, child) {
-                          return accounts.loading || accounts.accounts == null
-                              ? Container(
-                                  color: Colors.transparent,
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      20.0, 20.0, 20.0, 20.0),
-                                  child: Container(
-                                    width: double.infinity,
-                                    height: 221.0,
-                                    decoration: BoxDecoration(
-                                      color: AbuBankTheme.of(context)
-                                          .secondaryBackground,
-                                      image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: Image.asset(
-                                          'assets/images/card-bg.png',
-                                        ).image,
+              child: Consumer<AccountDataProvider>(
+                builder: (context, accounts, child) {
+                  return accounts.accounts == null && accounts.loading
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : accounts.accounts == null && !accounts.loading
+                          ? Center(
+                              child: TextButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStatePropertyAll(
+                                        AbuBankTheme.of(context).primary),
+                                  ),
+                                  onPressed: () {
+                                    Provider.of<AccountDataProvider>(context,
+                                            listen: false)
+                                        .getAccountDetails();
+                                  },
+                                  child: Text(
+                                    'Retry',
+                                    style: AbuBankTheme.of(context)
+                                        .bodySmall
+                                        .override(
+                                          fontFamily: 'Poppins',
+                                          color: AbuBankTheme.of(context)
+                                              .primaryText,
+                                          fontSize: 16,
+                                        ),
+                                  )),
+                            )
+                          : RefreshIndicator(
+                              onRefresh: () async {
+                                await Provider.of<AccountDataProvider>(context,
+                                        listen: false)
+                                    .getAccountDetails();
+                              },
+                              child: SingleChildScrollView(
+                                primary: false,
+                                physics: AlwaysScrollableScrollPhysics(),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    CarouselSlider(
+                                      items: List.generate(
+                                          accounts.accounts!.length,
+                                          (index) => index).map(
+                                        (i) {
+                                          return AccountSummaryWidget(
+                                            accountBalance: double.parse(
+                                                accounts.accounts![i].balance),
+                                            accountNumber: maskString(
+                                              accounts
+                                                  .accounts![i].accountNumber,
+                                              visibleDigits: 5,
+                                            ),
+                                            index: i,
+                                            totalAccounts:
+                                                accounts.accounts!.length,
+                                          );
+                                        },
+                                      ).toList(),
+                                      options: CarouselOptions(
+                                        enableInfiniteScroll: false,
+                                        clipBehavior: Clip.none,
+                                        height: 270,
+                                        viewportFraction: 1,
                                       ),
                                     ),
-                                    alignment: Alignment.center,
-                                    child: accounts.loading
-                                        ? CircularProgressIndicator()
-                                        : null,
-                                  ),
-                                )
-                              : CarouselSlider(
-                                  items: List.generate(
-                                      accounts.accounts!.length,
-                                      (index) => index).map(
-                                    (i) {
-                                      return AccountSummaryWidget(
-                                        accountBalance: double.parse(
-                                            accounts.accounts![i].balance),
-                                        accountNumber: maskString(
-                                          accounts.accounts![i].accountNumber,
-                                          visibleDigits: 5,
-                                        ),
-                                        index: i,
-                                        totalAccounts:
-                                            accounts.accounts!.length,
-                                      );
-                                    },
-                                  ).toList(),
-                                  options: CarouselOptions(
-                                    enableInfiniteScroll: false,
-                                    clipBehavior: Clip.none,
-                                    height: 270,
-                                    viewportFraction: 1,
-                                  ),
-                                );
-                        },
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            20.0, 10.0, 20.0, 20.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            InkWell(
-                              splashColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () async {
-                                await Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    type: PageTransitionType.scale,
-                                    alignment: Alignment.bottomCenter,
-                                    duration: Duration(milliseconds: 300),
-                                    reverseDuration:
-                                        Duration(milliseconds: 300),
-                                    child: NavBarPage(
-                                        initialPage: 'TransferFunds'),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                width: 100.0,
-                                height: 100.0,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFEEEEEE),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      blurRadius: 30.0,
-                                      color: Color(0x123629B7),
-                                      offset: Offset(0.0, -5.0),
-                                      spreadRadius: 30.0,
-                                    )
-                                  ],
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/images/tranfer-icon.svg',
-                                      width: 28.0,
-                                      height: 28.0,
-                                      fit: BoxFit.scaleDown,
-                                    ),
-                                    Text(
-                                      'Transfer',
-                                      textAlign: TextAlign.center,
-                                      style: AbuBankTheme.of(context)
-                                          .bodySmall
-                                          .override(
-                                            fontFamily: 'Poppins',
-                                            color: AbuBankTheme.of(context)
-                                                .secondaryText,
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          20.0, 10.0, 20.0, 20.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          InkWell(
+                                            splashColor: Colors.transparent,
+                                            focusColor: Colors.transparent,
+                                            hoverColor: Colors.transparent,
+                                            highlightColor: Colors.transparent,
+                                            onTap: () async {
+                                              await Navigator.push(
+                                                context,
+                                                PageTransition(
+                                                  type:
+                                                      PageTransitionType.scale,
+                                                  alignment:
+                                                      Alignment.bottomCenter,
+                                                  duration: Duration(
+                                                      milliseconds: 300),
+                                                  reverseDuration: Duration(
+                                                      milliseconds: 300),
+                                                  child: NavBarPage(
+                                                      initialPage:
+                                                          'TransferFunds'),
+                                                ),
+                                              );
+                                            },
+                                            child: Container(
+                                              width: 100.0,
+                                              height: 100.0,
+                                              decoration: BoxDecoration(
+                                                color: Color(0xFFEEEEEE),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    blurRadius: 30.0,
+                                                    color: Color(0x123629B7),
+                                                    offset: Offset(0.0, -5.0),
+                                                    spreadRadius: 30.0,
+                                                  )
+                                                ],
+                                                borderRadius:
+                                                    BorderRadius.circular(5.0),
+                                              ),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    'assets/images/tranfer-icon.svg',
+                                                    width: 28.0,
+                                                    height: 28.0,
+                                                    fit: BoxFit.scaleDown,
+                                                  ),
+                                                  Text(
+                                                    'Transfer',
+                                                    textAlign: TextAlign.center,
+                                                    style:
+                                                        AbuBankTheme.of(context)
+                                                            .bodySmall
+                                                            .override(
+                                                              fontFamily:
+                                                                  'Poppins',
+                                                              color: AbuBankTheme
+                                                                      .of(context)
+                                                                  .secondaryText,
+                                                            ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
                                           ),
+                                          InkWell(
+                                            splashColor: Colors.transparent,
+                                            focusColor: Colors.transparent,
+                                            hoverColor: Colors.transparent,
+                                            highlightColor: Colors.transparent,
+                                            onTap: () async {
+                                              await Navigator.push(
+                                                context,
+                                                PageTransition(
+                                                  type:
+                                                      PageTransitionType.scale,
+                                                  alignment:
+                                                      Alignment.bottomCenter,
+                                                  duration: Duration(
+                                                      milliseconds: 300),
+                                                  reverseDuration: Duration(
+                                                      milliseconds: 300),
+                                                  child: WithdrawFundsWidget(),
+                                                ),
+                                              );
+                                            },
+                                            child: Container(
+                                              width: 100.0,
+                                              height: 100.0,
+                                              decoration: BoxDecoration(
+                                                color: Color(0xFFEEEEEE),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    blurRadius: 30.0,
+                                                    color: Color(0x123629B7),
+                                                    offset: Offset(0.0, -5.0),
+                                                    spreadRadius: 30.0,
+                                                  )
+                                                ],
+                                                borderRadius:
+                                                    BorderRadius.circular(5.0),
+                                              ),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    'assets/images/wedraw-icon.svg',
+                                                    width: 28.0,
+                                                    height: 28.0,
+                                                    fit: BoxFit.scaleDown,
+                                                  ),
+                                                  Text(
+                                                    'Withdraw',
+                                                    textAlign: TextAlign.center,
+                                                    style:
+                                                        AbuBankTheme.of(context)
+                                                            .bodySmall
+                                                            .override(
+                                                              fontFamily:
+                                                                  'Poppins',
+                                                              color: AbuBankTheme
+                                                                      .of(context)
+                                                                  .secondaryText,
+                                                            ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          InkWell(
+                                            splashColor: Colors.transparent,
+                                            focusColor: Colors.transparent,
+                                            hoverColor: Colors.transparent,
+                                            highlightColor: Colors.transparent,
+                                            onTap: () async {
+                                              await Navigator.push(
+                                                context,
+                                                PageTransition(
+                                                  type:
+                                                      PageTransitionType.scale,
+                                                  alignment:
+                                                      Alignment.bottomCenter,
+                                                  duration: Duration(
+                                                      milliseconds: 300),
+                                                  reverseDuration: Duration(
+                                                      milliseconds: 300),
+                                                  child: SaveonlineWidget(),
+                                                ),
+                                              );
+                                            },
+                                            child: Container(
+                                              width: 100.0,
+                                              height: 100.0,
+                                              decoration: BoxDecoration(
+                                                color: Color(0xFFEEEEEE),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    blurRadius: 30.0,
+                                                    color: Color(0x123629B7),
+                                                    offset: Offset(0.0, -5.0),
+                                                    spreadRadius: 30.0,
+                                                  )
+                                                ],
+                                                borderRadius:
+                                                    BorderRadius.circular(5.0),
+                                              ),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    'assets/images/pig_1.svg',
+                                                    width: 28.0,
+                                                    height: 28.0,
+                                                    fit: BoxFit.scaleDown,
+                                                  ),
+                                                  Text(
+                                                    'Deposit',
+                                                    textAlign: TextAlign.center,
+                                                    style:
+                                                        AbuBankTheme.of(context)
+                                                            .bodySmall
+                                                            .override(
+                                                              fontFamily:
+                                                                  'Poppins',
+                                                              color: AbuBankTheme
+                                                                      .of(context)
+                                                                  .secondaryText,
+                                                            ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          20.0, 10.0, 20.0, 20.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          InkWell(
+                                            splashColor: Colors.transparent,
+                                            focusColor: Colors.transparent,
+                                            hoverColor: Colors.transparent,
+                                            highlightColor: Colors.transparent,
+                                            onTap: () async {
+                                              await Navigator.push(
+                                                context,
+                                                PageTransition(
+                                                  type:
+                                                      PageTransitionType.scale,
+                                                  alignment:
+                                                      Alignment.bottomCenter,
+                                                  duration: Duration(
+                                                      milliseconds: 300),
+                                                  reverseDuration: Duration(
+                                                      milliseconds: 300),
+                                                  child:
+                                                      TransactionreportWidget(),
+                                                ),
+                                              );
+                                            },
+                                            child: Container(
+                                              width: 100.0,
+                                              height: 100.0,
+                                              decoration: BoxDecoration(
+                                                color: Color(0xFFEEEEEE),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    blurRadius: 30.0,
+                                                    color: Color(0x123629B7),
+                                                    offset: Offset(0.0, -5.0),
+                                                    spreadRadius: 30.0,
+                                                  )
+                                                ],
+                                                borderRadius:
+                                                    BorderRadius.circular(5.0),
+                                              ),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    'assets/images/repprt-icon.svg',
+                                                    width: 28.0,
+                                                    height: 28.0,
+                                                    fit: BoxFit.scaleDown,
+                                                  ),
+                                                  Text(
+                                                    'Transaction\nhistory',
+                                                    textAlign: TextAlign.center,
+                                                    style:
+                                                        AbuBankTheme.of(context)
+                                                            .bodySmall
+                                                            .override(
+                                                              fontFamily:
+                                                                  'Poppins',
+                                                              color: AbuBankTheme
+                                                                      .of(context)
+                                                                  .secondaryText,
+                                                            ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                            ),
-                            InkWell(
-                              splashColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () async {
-                                await Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    type: PageTransitionType.scale,
-                                    alignment: Alignment.bottomCenter,
-                                    duration: Duration(milliseconds: 300),
-                                    reverseDuration:
-                                        Duration(milliseconds: 300),
-                                    child: WithdrawFundsWidget(),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                width: 100.0,
-                                height: 100.0,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFEEEEEE),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      blurRadius: 30.0,
-                                      color: Color(0x123629B7),
-                                      offset: Offset(0.0, -5.0),
-                                      spreadRadius: 30.0,
-                                    )
-                                  ],
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/images/wedraw-icon.svg',
-                                      width: 28.0,
-                                      height: 28.0,
-                                      fit: BoxFit.scaleDown,
-                                    ),
-                                    Text(
-                                      'Withdraw',
-                                      textAlign: TextAlign.center,
-                                      style: AbuBankTheme.of(context)
-                                          .bodySmall
-                                          .override(
-                                            fontFamily: 'Poppins',
-                                            color: AbuBankTheme.of(context)
-                                                .secondaryText,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              splashColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () async {
-                                await Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    type: PageTransitionType.scale,
-                                    alignment: Alignment.bottomCenter,
-                                    duration: Duration(milliseconds: 300),
-                                    reverseDuration:
-                                        Duration(milliseconds: 300),
-                                    child: SaveonlineWidget(),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                width: 100.0,
-                                height: 100.0,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFEEEEEE),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      blurRadius: 30.0,
-                                      color: Color(0x123629B7),
-                                      offset: Offset(0.0, -5.0),
-                                      spreadRadius: 30.0,
-                                    )
-                                  ],
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/images/pig_1.svg',
-                                      width: 28.0,
-                                      height: 28.0,
-                                      fit: BoxFit.scaleDown,
-                                    ),
-                                    Text(
-                                      'Deposit',
-                                      textAlign: TextAlign.center,
-                                      style: AbuBankTheme.of(context)
-                                          .bodySmall
-                                          .override(
-                                            fontFamily: 'Poppins',
-                                            color: AbuBankTheme.of(context)
-                                                .secondaryText,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            20.0, 10.0, 20.0, 20.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            InkWell(
-                              splashColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () async {
-                                await Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    type: PageTransitionType.scale,
-                                    alignment: Alignment.bottomCenter,
-                                    duration: Duration(milliseconds: 300),
-                                    reverseDuration:
-                                        Duration(milliseconds: 300),
-                                    child: TransactionreportWidget(),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                width: 100.0,
-                                height: 100.0,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFEEEEEE),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      blurRadius: 30.0,
-                                      color: Color(0x123629B7),
-                                      offset: Offset(0.0, -5.0),
-                                      spreadRadius: 30.0,
-                                    )
-                                  ],
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/images/repprt-icon.svg',
-                                      width: 28.0,
-                                      height: 28.0,
-                                      fit: BoxFit.scaleDown,
-                                    ),
-                                    Text(
-                                      'Transaction\nhistory',
-                                      textAlign: TextAlign.center,
-                                      style: AbuBankTheme.of(context)
-                                          .bodySmall
-                                          .override(
-                                            fontFamily: 'Poppins',
-                                            color: AbuBankTheme.of(context)
-                                                .secondaryText,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                            );
+                },
               ),
             ),
           ),
