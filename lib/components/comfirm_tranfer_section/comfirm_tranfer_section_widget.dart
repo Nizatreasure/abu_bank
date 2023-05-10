@@ -2,7 +2,6 @@ import 'package:aza_bank/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '/pages/transfer_suscessful/transfer_suscessful_widget.dart';
 import '../../theme/aza_bank_theme.dart';
 import '../../theme/aza_bank_util.dart';
 import '../../theme/aza_bank_widgets.dart';
@@ -339,6 +338,7 @@ class _ComfirmTranferSectionWidgetState
                         child: TextFormField(
                           controller: _model.textController,
                           obscureText: false,
+                          maxLength: 4,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly
                           ],
@@ -356,6 +356,7 @@ class _ComfirmTranferSectionWidgetState
                                 topRight: Radius.circular(4.0),
                               ),
                             ),
+                            counterText: '',
                             focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
                                 color: Color(0x00000000),
@@ -412,16 +413,8 @@ class _ComfirmTranferSectionWidgetState
                         EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 10.0, 0.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await Navigator.push(
-                          context,
-                          PageTransition(
-                            type: PageTransitionType.scale,
-                            alignment: Alignment.bottomCenter,
-                            duration: Duration(milliseconds: 300),
-                            reverseDuration: Duration(milliseconds: 300),
-                            child: TransferSuscessfulWidget(),
-                          ),
-                        );
+                        Navigator.pop(
+                            context, _model.textController.text.trim());
                       },
                       text: 'Comfirm',
                       options: FFButtonOptions(

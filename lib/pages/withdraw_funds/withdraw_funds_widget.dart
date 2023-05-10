@@ -319,6 +319,7 @@ class _WithdrawFundsWidgetState extends State<WithdrawFundsWidget> {
                                 alignment: Alignment.bottomCenter,
                                 duration: Duration(milliseconds: 300),
                                 reverseDuration: Duration(milliseconds: 300),
+                                // child: ComfirmTranferWidget(),
                                 child: Container(),
                               ),
                             );

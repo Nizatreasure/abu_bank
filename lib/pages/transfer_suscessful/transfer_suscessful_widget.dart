@@ -1,15 +1,23 @@
-import '../../theme/aza_bank_icon_button.dart';
-import '../../theme/aza_bank_theme.dart';
-import '../../theme/aza_bank_util.dart';
-import '/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:share_plus/share_plus.dart';
+
+import '/main.dart';
+import '../../theme/aza_bank_icon_button.dart';
+import '../../theme/aza_bank_theme.dart';
+import '../../theme/aza_bank_util.dart';
 import 'transfer_suscessful_model.dart';
+
 export 'transfer_suscessful_model.dart';
 
 class TransferSuscessfulWidget extends StatefulWidget {
-  const TransferSuscessfulWidget({Key? key}) : super(key: key);
+  final String amount;
+  final String beneficiaryName;
+  const TransferSuscessfulWidget({
+    required this.amount,
+    required this.beneficiaryName,
+    Key? key,
+  }) : super(key: key);
 
   @override
   _TransferSuscessfulWidgetState createState() =>
@@ -97,11 +105,11 @@ class _TransferSuscessfulWidgetState extends State<TransferSuscessfulWidget> {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     0.0, 0.0, 5.0, 0.0),
                                 child: Text(
-                                  '\$ 1,000',
+                                  '\u20A6 ${numberFormat.format(double.parse(widget.amount.toString()))}',
                                   style: AbuBankTheme.of(context)
                                       .bodyMedium
                                       .override(
-                                        fontFamily: 'Poppins',
+                                        fontFamily: 'Roboto',
                                         color:
                                             AbuBankTheme.of(context).secondary,
                                         fontWeight: FontWeight.bold,
@@ -120,7 +128,7 @@ class _TransferSuscessfulWidgetState extends State<TransferSuscessfulWidget> {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     5.0, 0.0, 0.0, 0.0),
                                 child: Text(
-                                  'Adonis Justin Mark',
+                                  widget.beneficiaryName,
                                   style: AbuBankTheme.of(context)
                                       .titleSmall
                                       .override(

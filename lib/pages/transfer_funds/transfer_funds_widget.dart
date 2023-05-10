@@ -9,6 +9,7 @@ import '../../helper/thousand_separator.dart';
 import '../../theme/aza_bank_theme.dart';
 import '../../theme/aza_bank_util.dart';
 import '../../theme/aza_bank_widgets.dart';
+import '../transfer_suscessful/transfer_suscessful_widget.dart';
 import 'transfer_funds_model.dart';
 
 export 'transfer_funds_model.dart';
@@ -532,7 +533,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                     false;
 
                 if (confirm) {
-                  await showModalBottomSheet(
+                  String? pin = await showModalBottomSheet(
                     isScrollControlled: true,
                     backgroundColor: Colors.transparent,
                     barrierColor: Color(0x00000000),
@@ -559,6 +560,29 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                       );
                     },
                   );
+
+                  if (pin != null) {
+                    //make network call
+
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.scale,
+                        alignment: Alignment.bottomCenter,
+                        duration: Duration(milliseconds: 300),
+                        reverseDuration: Duration(milliseconds: 300),
+                        child: TransferSuscessfulWidget(
+                          amount: RemoveThousandSeparator(_model
+                                  .textController6.text
+                                  .trim()
+                                  .substring(1)
+                                  .trim())
+                              .toString(),
+                          beneficiaryName: '',
+                        ),
+                      ),
+                    );
+                  }
                 }
               },
               text: 'Comfirm',
@@ -979,7 +1003,12 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                         child: ComfirmTranferWidget(
                           accountNumber: '',
                           note: _model.textController7.text.trim(),
-                          amount: _model.textController6.text.trim(),
+                          amount: RemoveThousandSeparator(_model
+                                  .textController6.text
+                                  .trim()
+                                  .substring(1)
+                                  .trim())
+                              .toString(),
                           bankName: _beneficiaryBankController.text.trim(),
                           beneficiaryAccount:
                               _model.textController8.text.trim(),
@@ -990,7 +1019,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                     ) ??
                     false;
                 if (confirm) {
-                  await showModalBottomSheet(
+                  String? pin = await showModalBottomSheet(
                     isScrollControlled: true,
                     backgroundColor: Colors.transparent,
                     barrierColor: Color(0x00000000),
@@ -1002,16 +1031,45 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                           height: MediaQuery.of(context).size.height * 0.65,
                           child: ComfirmTranferSectionWidget(
                             accountNumber: '',
-                            amount: _model.textController6.text.trim(),
-                            bankName: '',
+                            amount: RemoveThousandSeparator(_model
+                                    .textController6.text
+                                    .trim()
+                                    .substring(1)
+                                    .trim())
+                                .toString(),
+                            bankName: _beneficiaryBankController.text.trim(),
                             beneficiaryAccount:
                                 _model.textController8.text.trim(),
-                            beneficiaryName: '',
+                            beneficiaryName:
+                                _beneficiaryNameController.text.trim(),
                           ),
                         ),
                       );
                     },
                   );
+
+                  if (pin != null) {
+                    //make network call
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.scale,
+                        alignment: Alignment.bottomCenter,
+                        duration: Duration(milliseconds: 300),
+                        reverseDuration: Duration(milliseconds: 300),
+                        child: TransferSuscessfulWidget(
+                          amount: RemoveThousandSeparator(_model
+                                  .textController6.text
+                                  .trim()
+                                  .substring(1)
+                                  .trim())
+                              .toString(),
+                          beneficiaryName:
+                              _beneficiaryNameController.text.trim(),
+                        ),
+                      ),
+                    );
+                  }
                 }
               },
               text: 'Comfirm',

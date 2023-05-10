@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../../main.dart';
 import '../../theme/aza_bank_theme.dart';
-import '../../theme/aza_bank_util.dart';
-import '../accountandcard/accountandcard_widget.dart';
 
 class AccountSummaryWidget extends StatefulWidget {
   final String accountNumber;
@@ -38,16 +36,16 @@ class _AccountSummaryWidgetState extends State<AccountSummaryWidget> {
             hoverColor: Colors.transparent,
             highlightColor: Colors.transparent,
             onTap: () async {
-              await Navigator.push(
-                context,
-                PageTransition(
-                  type: PageTransitionType.scale,
-                  alignment: Alignment.bottomCenter,
-                  duration: Duration(milliseconds: 300),
-                  reverseDuration: Duration(milliseconds: 300),
-                  child: AccountandcardWidget(),
-                ),
-              );
+              // await Navigator.push(
+              //   context,
+              //   PageTransition(
+              //     type: PageTransitionType.scale,
+              //     alignment: Alignment.bottomCenter,
+              //     duration: Duration(milliseconds: 300),
+              //     reverseDuration: Duration(milliseconds: 300),
+              //     child: AccountandcardWidget(),
+              //   ),
+              // );
             },
             child: Container(
               width: double.infinity,

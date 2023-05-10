@@ -176,13 +176,13 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       CarouselSlider(
-                        items: List.generate(5, (index) => index + 1).map(
+                        items: List.generate(5, (index) => index).map(
                           (i) {
                             return AccountSummaryWidget(
                               accountBalance: 209878.78,
                               accountNumber: '0209849421',
-                              index: 0,
-                              totalAccounts: 1,
+                              index: i,
+                              totalAccounts: 5,
                             );
                           },
                         ).toList(),

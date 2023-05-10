@@ -1,13 +1,15 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 import '/components/choose_accoun_section/choose_accoun_section_widget.dart';
 import '/components/choosetimedeposit_section/choosetimedeposit_section_widget.dart';
+import '/main.dart';
+import '/pages/transfer_suscessful/transfer_suscessful_widget.dart';
 import '../../theme/aza_bank_theme.dart';
 import '../../theme/aza_bank_util.dart';
 import '../../theme/aza_bank_widgets.dart';
-import '/main.dart';
-import '/pages/transfer_suscessful/transfer_suscessful_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'addnewsavings_model.dart';
+
 export 'addnewsavings_model.dart';
 
 class AddnewsavingsWidget extends StatefulWidget {
@@ -434,7 +436,10 @@ class _AddnewsavingsWidgetState extends State<AddnewsavingsWidget> {
                                 alignment: Alignment.bottomCenter,
                                 duration: Duration(milliseconds: 300),
                                 reverseDuration: Duration(milliseconds: 300),
-                                child: TransferSuscessfulWidget(),
+                                child: TransferSuscessfulWidget(
+                                  amount: '',
+                                  beneficiaryName: '',
+                                ),
                               ),
                             );
                           },
