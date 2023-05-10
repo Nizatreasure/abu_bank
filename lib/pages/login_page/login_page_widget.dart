@@ -550,6 +550,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
       userData = response['data'] as LoginModel;
       Provider.of<AccountDataProvider>(context, listen: false)
           .getAccountDetails();
+      Provider.of<AccountDataProvider>(context, listen: false).getBanks();
       Navigator.pushAndRemoveUntil(
         context,
         PageTransition(

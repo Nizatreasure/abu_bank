@@ -170,11 +170,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               ),
               child: Consumer<AccountDataProvider>(
                 builder: (context, accounts, child) {
-                  return accounts.accounts == null && accounts.loading
+                  return accounts.accounts == null && accounts.loadingDetails
                       ? Center(
                           child: CircularProgressIndicator(),
                         )
-                      : accounts.accounts == null && !accounts.loading
+                      : accounts.accounts == null && !accounts.loadingDetails
                           ? Center(
                               child: TextButton(
                                   style: ButtonStyle(
