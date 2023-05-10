@@ -12,11 +12,10 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../main.dart';
 
-
 export 'lat_lng.dart';
 export 'place.dart';
 export 'uploaded_file.dart';
-export 'aza_bank_model.dart';
+export 'abu_bank_model.dart';
 export 'dart:math' show min, max;
 export 'dart:typed_data' show Uint8List;
 export 'dart:convert' show jsonEncode, jsonDecode;

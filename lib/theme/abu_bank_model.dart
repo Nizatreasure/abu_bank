@@ -76,8 +76,8 @@ abstract class AbuBankModel {
   }
 }
 
-class AzaBankDynamicModels<T extends AbuBankModel> {
-  AzaBankDynamicModels(this.defaultBuilder);
+class AbuBankDynamicModels<T extends AbuBankModel> {
+  AbuBankDynamicModels(this.defaultBuilder);
 
   final T Function() defaultBuilder;
   final Map<String, T> _childrenModels = {};

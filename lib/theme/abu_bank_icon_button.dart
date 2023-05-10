@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class AzaBankIconButton extends StatefulWidget {
-  const AzaBankIconButton({
+class AbuBankIconButton extends StatefulWidget {
+  const AbuBankIconButton({
     Key? key,
     required this.icon,
     this.borderColor,
@@ -32,10 +32,10 @@ class AzaBankIconButton extends StatefulWidget {
   final Function()? onPressed;
 
   @override
-  State<AzaBankIconButton> createState() => _AzaBankIconButtonState();
+  State<AbuBankIconButton> createState() => _AbuBankIconButtonState();
 }
 
-class _AzaBankIconButtonState extends State<AzaBankIconButton> {
+class _AbuBankIconButtonState extends State<AbuBankIconButton> {
   bool loading = false;
   late double? iconSize;
   late Color? iconColor;
@@ -48,7 +48,7 @@ class _AzaBankIconButtonState extends State<AzaBankIconButton> {
   }
 
   @override
-  void didUpdateWidget(AzaBankIconButton oldWidget) {
+  void didUpdateWidget(AbuBankIconButton oldWidget) {
     super.didUpdateWidget(oldWidget);
     _updateIcon();
   }

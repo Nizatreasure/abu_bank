@@ -1,4 +1,4 @@
-import 'package:aza_bank/helper/account_container.dart';
+import 'package:abu_bank/helper/account_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -6,9 +6,9 @@ import '/pages/comfirm_tranfer/comfirm_tranfer_widget.dart';
 import '../../components/comfirm_tranfer_section/comfirm_tranfer_section_widget.dart';
 import '../../helper/prefix_add.dart';
 import '../../helper/thousand_separator.dart';
-import '../../theme/aza_bank_theme.dart';
-import '../../theme/aza_bank_util.dart';
-import '../../theme/aza_bank_widgets.dart';
+import '../../theme/abu_bank_theme.dart';
+import '../../theme/abu_bank_util.dart';
+import '../../theme/abu_bank_widgets.dart';
 import '../transfer_suscessful/transfer_suscessful_widget.dart';
 import 'transfer_funds_model.dart';
 

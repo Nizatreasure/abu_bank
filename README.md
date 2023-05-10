@@ -1,10 +1,10 @@
-# AzaBank
+# AbuBank
 
 A new Flutter project.
 
 ## Getting Started
 
-AzaBank projects are built to run on the Flutter _stable_ release.
+AbuBank projects are built to run on the Flutter _stable_ release.
 
 ### IMPORTANT:
 

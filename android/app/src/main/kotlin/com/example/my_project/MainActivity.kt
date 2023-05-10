@@ -1,4 +1,4 @@
-package com.azabank.denoveo
+package com.abubank.denoveo
 
 import io.flutter.embedding.android.FlutterActivity
 

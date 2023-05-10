@@ -1,10 +1,10 @@
-import 'package:aza_bank/main.dart';
+import 'package:abu_bank/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../theme/aza_bank_theme.dart';
-import '../../theme/aza_bank_util.dart';
-import '../../theme/aza_bank_widgets.dart';
+import '../../theme/abu_bank_theme.dart';
+import '../../theme/abu_bank_util.dart';
+import '../../theme/abu_bank_widgets.dart';
 import 'comfirm_tranfer_section_model.dart';
 
 export 'comfirm_tranfer_section_model.dart';

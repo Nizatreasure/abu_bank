@@ -1,5 +1,5 @@
-import '../../theme/aza_bank_theme.dart';
-import '../../theme/aza_bank_util.dart';
+import '../../theme/abu_bank_theme.dart';
+import '../../theme/abu_bank_util.dart';
 import 'package:flutter/material.dart';
 import 'interestrate_model.dart';
 export 'interestrate_model.dart';

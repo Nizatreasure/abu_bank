@@ -1,4 +1,4 @@
-import 'package:aza_bank/pages/home_page/account_details.dart';
+import 'package:abu_bank/pages/home_page/account_details.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,8 +8,8 @@ import '/pages/notification/notification_widget.dart';
 import '/pages/saveonline/saveonline_widget.dart';
 import '/pages/transactionreport/transactionreport_widget.dart';
 import '/pages/withdraw_funds/withdraw_funds_widget.dart';
-import '../../theme/aza_bank_theme.dart';
-import '../../theme/aza_bank_util.dart';
+import '../../theme/abu_bank_theme.dart';
+import '../../theme/abu_bank_util.dart';
 import 'home_page_model.dart';
 
 export 'home_page_model.dart';

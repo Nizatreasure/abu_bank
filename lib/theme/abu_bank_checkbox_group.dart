@@ -4,8 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-class AzaBankCheckboxGroup extends StatefulWidget {
-  const AzaBankCheckboxGroup({
+class AbuBankCheckboxGroup extends StatefulWidget {
+  const AbuBankCheckboxGroup({
     required this.options,
     required this.onChanged,
     required this.controller,
@@ -32,10 +32,10 @@ class AzaBankCheckboxGroup extends StatefulWidget {
   final bool initialized;
 
   @override
-  State<AzaBankCheckboxGroup> createState() => _AzaBankCheckboxGroupState();
+  State<AbuBankCheckboxGroup> createState() => _AbuBankCheckboxGroupState();
 }
 
-class _AzaBankCheckboxGroupState extends State<AzaBankCheckboxGroup> {
+class _AbuBankCheckboxGroupState extends State<AbuBankCheckboxGroup> {
   late List<String> checkboxValues;
   ValueListenable<List<String>?> get changeSelectedValues => widget.controller;
   List<String> get selectedValues => widget.controller.value ?? [];

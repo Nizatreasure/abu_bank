@@ -3,9 +3,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '/main.dart';
-import '../../theme/aza_bank_icon_button.dart';
-import '../../theme/aza_bank_theme.dart';
-import '../../theme/aza_bank_util.dart';
+import '../../theme/abu_bank_icon_button.dart';
+import '../../theme/abu_bank_theme.dart';
+import '../../theme/abu_bank_util.dart';
 import 'transfer_suscessful_model.dart';
 
 export 'transfer_suscessful_model.dart';
@@ -157,7 +157,7 @@ class _TransferSuscessfulWidgetState extends State<TransferSuscessfulWidget> {
                       builder: (context) => Padding(
                         padding:
                             EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 5.0),
-                        child: AzaBankIconButton(
+                        child: AbuBankIconButton(
                           borderColor: Colors.transparent,
                           borderRadius: 30.0,
                           borderWidth: 1.0,
@@ -181,7 +181,7 @@ class _TransferSuscessfulWidgetState extends State<TransferSuscessfulWidget> {
                     Padding(
                       padding:
                           EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 5.0),
-                      child: AzaBankIconButton(
+                      child: AbuBankIconButton(
                         borderColor: Colors.transparent,
                         borderRadius: 30.0,
                         borderWidth: 1.0,
@@ -200,7 +200,7 @@ class _TransferSuscessfulWidgetState extends State<TransferSuscessfulWidget> {
                     Padding(
                       padding:
                           EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 5.0),
-                      child: AzaBankIconButton(
+                      child: AbuBankIconButton(
                         borderColor: Colors.transparent,
                         borderRadius: 30.0,
                         borderWidth: 1.0,

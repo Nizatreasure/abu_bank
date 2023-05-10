@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../components/choose_accoun_section/choose_accoun_section_widget.dart';
 import '../main.dart';
-import '../theme/aza_bank_theme.dart';
+import '../theme/abu_bank_theme.dart';
 
 class AccountContainer extends StatelessWidget {
   const AccountContainer({Key? key}) : super(key: key);
