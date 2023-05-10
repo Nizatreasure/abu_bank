@@ -1,7 +1,11 @@
+import 'package:abu_bank/helper/constants.dart';
+import 'package:abu_bank/helper/mask_string.dart';
 import 'package:abu_bank/pages/home_page/account_details.dart';
+import 'package:abu_bank/providers/account_data_provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 import '/main.dart';
 import '/pages/notification/notification_widget.dart';
@@ -25,7 +29,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   late HomePageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final _unfocusNode = FocusNode();
+
   bool showBalance = false;
 
   @override
@@ -38,160 +42,197 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   void dispose() {
     _model.dispose();
 
-    _unfocusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
-      child: Scaffold(
-        key: scaffoldKey,
-        backgroundColor: AbuBankTheme.of(context).primary,
-        body: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                height: 100.0,
-                decoration: BoxDecoration(
-                  color: AbuBankTheme.of(context).primary,
-                ),
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(5.0, 15.0, 5.0, 0.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              InkWell(
-                                splashColor: Colors.transparent,
-                                focusColor: Colors.transparent,
-                                hoverColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                onTap: () async {
-                                  await Navigator.push(
-                                    context,
-                                    PageTransition(
-                                      type: PageTransitionType.scale,
-                                      alignment: Alignment.bottomCenter,
-                                      duration: Duration(milliseconds: 300),
-                                      reverseDuration:
-                                          Duration(milliseconds: 300),
-                                      child: NavBarPage(
-                                          initialPage: 'Settingspage'),
-                                    ),
-                                  );
-                                },
-                                child: Container(
-                                  width: 35.0,
-                                  height: 35.0,
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
+    return Scaffold(
+      key: scaffoldKey,
+      backgroundColor: AbuBankTheme.of(context).primary,
+      body: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              height: 100.0,
+              decoration: BoxDecoration(
+                color: AbuBankTheme.of(context).primary,
+              ),
+              child: Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(5.0, 15.0, 5.0, 0.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            InkWell(
+                              splashColor: Colors.transparent,
+                              focusColor: Colors.transparent,
+                              hoverColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              onTap: () async {
+                                await Navigator.push(
+                                  context,
+                                  PageTransition(
+                                    type: PageTransitionType.scale,
+                                    alignment: Alignment.bottomCenter,
+                                    duration: Duration(milliseconds: 300),
+                                    reverseDuration:
+                                        Duration(milliseconds: 300),
+                                    child:
+                                        NavBarPage(initialPage: 'Settingspage'),
                                   ),
-                                  child: Image.asset(
-                                    'assets/images/Avatar.png',
-                                  ),
+                                );
+                              },
+                              child: Container(
+                                width: 35.0,
+                                height: 35.0,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Image.asset(
+                                  'assets/images/Avatar.png',
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    10.0, 0.0, 0.0, 0.0),
-                                child: Text(
-                                  'Hi, Push Puttichai',
-                                  style: AbuBankTheme.of(context)
-                                      .titleMedium
-                                      .override(
-                                        fontFamily: 'Poppins',
-                                        color:
-                                            AbuBankTheme.of(context).primary3,
-                                      ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            splashColor: Colors.transparent,
-                            focusColor: Colors.transparent,
-                            hoverColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            onTap: () async {
-                              await Navigator.push(
-                                context,
-                                PageTransition(
-                                  type: PageTransitionType.scale,
-                                  alignment: Alignment.bottomCenter,
-                                  duration: Duration(milliseconds: 300),
-                                  reverseDuration: Duration(milliseconds: 300),
-                                  child: NotificationWidget(),
-                                ),
-                              );
-                            },
-                            child: Icon(
-                              Icons.notification_important,
-                              color: AbuBankTheme.of(context).primary3,
-                              size: 30.0,
                             ),
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  10.0, 0.0, 0.0, 0.0),
+                              child: Text(
+                                'Hi, ${userData?.firstName ?? ''} ${userData?.lastName ?? ''}',
+                                style: AbuBankTheme.of(context)
+                                    .titleMedium
+                                    .override(
+                                      fontFamily: 'Poppins',
+                                      color: AbuBankTheme.of(context).primary3,
+                                    ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () async {
+                            await Navigator.push(
+                              context,
+                              PageTransition(
+                                type: PageTransitionType.scale,
+                                alignment: Alignment.bottomCenter,
+                                duration: Duration(milliseconds: 300),
+                                reverseDuration: Duration(milliseconds: 300),
+                                child: NotificationWidget(),
+                              ),
+                            );
+                          },
+                          child: Icon(
+                            Icons.notification_important,
+                            color: AbuBankTheme.of(context).primary3,
+                            size: 30.0,
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
-            Expanded(
-              flex: 5,
-              child: Container(
-                width: double.infinity,
-                height: 100.0,
-                decoration: BoxDecoration(
-                  color: AbuBankTheme.of(context).secondaryBackground,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(0.0),
-                    bottomRight: Radius.circular(0.0),
-                    topLeft: Radius.circular(30.0),
-                    topRight: Radius.circular(30.0),
-                  ),
+          ),
+          Expanded(
+            flex: 5,
+            child: Container(
+              width: double.infinity,
+              height: 100.0,
+              decoration: BoxDecoration(
+                color: AbuBankTheme.of(context).secondaryBackground,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(0.0),
+                  bottomRight: Radius.circular(0.0),
+                  topLeft: Radius.circular(30.0),
+                  topRight: Radius.circular(30.0),
                 ),
+              ),
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  await Provider.of<AccountDataProvider>(context, listen: false)
+                      .getAccountDetails();
+                },
                 child: SingleChildScrollView(
                   primary: false,
+                  physics: AlwaysScrollableScrollPhysics(),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      CarouselSlider(
-                        items: List.generate(5, (index) => index).map(
-                          (i) {
-                            return AccountSummaryWidget(
-                              accountBalance: 209878.78,
-                              accountNumber: '0209849421',
-                              index: i,
-                              totalAccounts: 5,
-                            );
-                          },
-                        ).toList(),
-                        options: CarouselOptions(
-                          enableInfiniteScroll: false,
-                          clipBehavior: Clip.none,
-                          height: 270,
-                          viewportFraction: 1,
-                        ),
+                      Consumer<AccountDataProvider>(
+                        builder: (context, accounts, child) {
+                          return accounts.loading || accounts.accounts == null
+                              ? Container(
+                                  color: Colors.transparent,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      20.0, 20.0, 20.0, 20.0),
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: 221.0,
+                                    decoration: BoxDecoration(
+                                      color: AbuBankTheme.of(context)
+                                          .secondaryBackground,
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: Image.asset(
+                                          'assets/images/card-bg.png',
+                                        ).image,
+                                      ),
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: accounts.loading
+                                        ? CircularProgressIndicator()
+                                        : null,
+                                  ),
+                                )
+                              : CarouselSlider(
+                                  items: List.generate(
+                                      accounts.accounts!.length,
+                                      (index) => index).map(
+                                    (i) {
+                                      return AccountSummaryWidget(
+                                        accountBalance: double.parse(
+                                            accounts.accounts![i].balance),
+                                        accountNumber: maskString(
+                                          accounts.accounts![i].accountNumber,
+                                          visibleDigits: 5,
+                                        ),
+                                        index: i,
+                                        totalAccounts:
+                                            accounts.accounts!.length,
+                                      );
+                                    },
+                                  ).toList(),
+                                  options: CarouselOptions(
+                                    enableInfiniteScroll: false,
+                                    clipBehavior: Clip.none,
+                                    height: 270,
+                                    viewportFraction: 1,
+                                  ),
+                                );
+                        },
                       ),
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(
@@ -455,8 +496,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

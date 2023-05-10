@@ -7,14 +7,19 @@ import '../helper/constants.dart';
 
 class Accounts {
   static Future<Map<String, dynamic>> getAccounts() async {
-    String url = '$baseUrl/api/api.php?action=login';
+    String url = '$baseUrl/api/api.php?action=account';
 
     try {
       final response = await http.post(
         Uri.parse(url),
-        body: jsonEncode({'user_id': userData!.userId}),
+        body: jsonEncode({
+          'user_id': 23,
+        }),
         headers: {'Content-Type': 'application/json'},
       ).timeout(const Duration(seconds: 90));
+
+      print(response.statusCode);
+      print(response.reasonPhrase);
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

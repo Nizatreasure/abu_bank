@@ -6,12 +6,13 @@ class AccountDataProvider extends ChangeNotifier {
   List<AccountModel>? accounts;
   bool loading = false;
 
-  getAccountDetails() async {
+  Future<void> getAccountDetails() async {
     loading = true;
     await Future.delayed(const Duration(milliseconds: 1));
-    notifyListeners();
+    if (accounts == null) notifyListeners();
 
     final response = await Accounts.getAccounts();
+
     if (response['status']) {
       accounts = response['data'];
     }
