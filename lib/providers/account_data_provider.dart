@@ -1,5 +1,6 @@
 import 'package:abu_bank/models/account_model.dart';
 import 'package:abu_bank/models/bank_model.dart';
+import 'package:abu_bank/models/transaction_history_model.dart';
 import 'package:abu_bank/requests/accounts.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +12,10 @@ class AccountDataProvider extends ChangeNotifier {
 
   List<BankModel>? banks;
   bool loadingBanks = false;
+
+  List<TransactionHistoryModel>? transactionHistory;
+  bool loadingHistory = false;
+  bool historyHasError = false;
 
   changeSelectedAccount(AccountModel account) async {
     selectedAccount = account;
@@ -32,6 +37,26 @@ class AccountDataProvider extends ChangeNotifier {
     }
 
     loadingDetails = false;
+    await Future.delayed(const Duration(milliseconds: 1));
+    notifyListeners();
+  }
+
+  Future<void> getTransactionHistory() async {
+    if (loadingHistory) return;
+    loadingHistory = true;
+    historyHasError = false;
+    await Future.delayed(const Duration(milliseconds: 1));
+    notifyListeners();
+
+    final response = await Accounts.getTransactionHistory();
+
+    if (response['status']) {
+      transactionHistory = response['data'];
+    } else {
+      historyHasError = true;
+    }
+
+    loadingHistory = false;
     await Future.delayed(const Duration(milliseconds: 1));
     notifyListeners();
   }

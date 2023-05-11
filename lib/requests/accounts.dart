@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:abu_bank/models/account_model.dart';
 import 'package:abu_bank/models/bank_model.dart';
+import 'package:abu_bank/models/transaction_history_model.dart';
 import 'package:http/http.dart' as http;
 
 import '../helper/constants.dart';
@@ -296,6 +297,38 @@ class Accounts {
             'status': false,
             'message': data['message'] ?? 'Withdrawal failed'
           };
+        }
+      }
+      throw (Error());
+    } catch (_) {
+      return {'status': false, 'message': 'An error occurred'};
+    }
+  }
+
+  static Future<Map<String, dynamic>> getTransactionHistory() async {
+    String url = '$baseUrl/api/api.php?action=trans';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode({
+          'user_id': userData!.userId,
+        }),
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(const Duration(seconds: 90));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        if (data['status'].toString().toLowerCase() == 'success') {
+          List<TransactionHistoryModel> history = <TransactionHistoryModel>[];
+          (data['data'] as List).forEach((element) {
+            history.add(TransactionHistoryModel.fromJson(element));
+          });
+          history.sort((a, b) => b.id.compareTo(a.id));
+          return {'status': true, 'data': history};
+        } else {
+          return {'status': false, 'message': data['message']};
         }
       }
       throw (Error());
