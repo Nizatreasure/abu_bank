@@ -10,7 +10,7 @@ class FFButtonOptions {
     this.width,
     this.padding,
     this.color,
-    this.disabledColor,
+    this.disabledColor = const Color.fromRGBO(40, 28, 157, 0.3),
     this.disabledTextColor,
     this.splashColor,
     this.iconSize,

@@ -7,6 +7,7 @@ class AccountDataProvider extends ChangeNotifier {
   List<AccountModel>? accounts;
   bool loadingDetails = false;
   AccountModel? selectedAccount;
+  bool hasSetPin = false;
 
   List<BankModel>? banks;
   bool loadingBanks = false;
@@ -26,7 +27,8 @@ class AccountDataProvider extends ChangeNotifier {
     final response = await Accounts.getAccounts();
 
     if (response['status']) {
-      accounts = response['data'];
+      accounts = response['data']['data'];
+      hasSetPin = response['data']['hasSetPin'];
     }
 
     loadingDetails = false;

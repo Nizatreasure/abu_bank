@@ -46,13 +46,11 @@ class _AccountContainerState extends State<AccountContainer> {
                 barrierColor: Color(0x00000000),
                 context: context,
                 builder: (bottomSheetContext) {
-                  return GestureDetector(
-                    child: Padding(
-                      padding: MediaQuery.of(bottomSheetContext).viewInsets,
-                      child: Container(
-                        height: MediaQuery.of(context).size.height * 0.65,
-                        child: ChooseAccounSectionWidget(),
-                      ),
+                  return Padding(
+                    padding: MediaQuery.of(bottomSheetContext).viewInsets,
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.65,
+                      child: ChooseAccounSectionWidget(),
                     ),
                   );
                 },

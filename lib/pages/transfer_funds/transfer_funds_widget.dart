@@ -1,5 +1,6 @@
 import 'package:abu_bank/helper/account_container.dart';
 import 'package:abu_bank/models/bank_model.dart';
+import 'package:abu_bank/pages/set_new_pin/set_new_pin.dart';
 import 'package:abu_bank/requests/accounts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -504,7 +505,8 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
                     ThousandsSeparatorInputFormatter(),
-                    PrefixAdd(provider.selectedAccount!.currencySign),
+                    PrefixAdd(provider.selectedAccount?.currencySign ??
+                        provider.accounts![0].currencySign),
                   ],
                   decoration: InputDecoration(
                     labelText: 'Enter Amount',
@@ -636,6 +638,20 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
             padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
             child: FFButtonWidget(
               onPressed: () async {
+                await showModalBottomSheet(
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  barrierColor: Color(0x00000000),
+                  context: context,
+                  builder: (bottomSheetContext) {
+                    return Padding(
+                      padding: MediaQuery.of(bottomSheetContext).viewInsets,
+                      child: SetNewPin(),
+                    );
+                  },
+                );
+
+                return;
                 if (_model.textController5.text.trim().length != 10 ||
                     _model.textController6.text.trim().isEmpty) {
                   return;
@@ -740,7 +756,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                   }
                 }
               },
-              text: 'Comfirm',
+              text: 'Confirm',
               options: FFButtonOptions(
                 width: 130.0,
                 height: 55.0,
@@ -1093,7 +1109,8 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
                     ThousandsSeparatorInputFormatter(),
-                    PrefixAdd(provider.selectedAccount!.currencySign),
+                    PrefixAdd(provider.selectedAccount?.currencySign ??
+                        provider.accounts![0].currencySign),
                   ],
                   decoration: InputDecoration(
                     labelText: 'Enter Amount',
@@ -1333,7 +1350,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                   }
                 }
               },
-              text: 'Comfirm',
+              text: 'Confirm',
               options: FFButtonOptions(
                 width: 130.0,
                 height: 55.0,

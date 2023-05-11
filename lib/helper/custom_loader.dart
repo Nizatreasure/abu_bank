@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../theme/abu_bank_theme.dart';
-
-class CustomLoader {
+class CustomOverlay {
   static BuildContext? _context;
-  CustomLoader();
+  CustomOverlay();
 
-  static showLoader(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
+  static showOverlay(BuildContext context) {
     showDialog(
       barrierDismissible: false,
       useRootNavigator: true,
@@ -19,31 +16,17 @@ class CustomLoader {
           onWillPop: () async {
             return false;
           },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                height: 0.15 * width,
-                width: 0.15 * width,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AbuBankTheme.of(context).secondaryBackground,
-                ),
-                child: CircularProgressIndicator(
-                  valueColor:
-                      AlwaysStoppedAnimation(AbuBankTheme.of(context).primary),
-                ),
-              ),
-            ],
+          child: Container(
+            height: double.infinity,
+            width: double.infinity,
+            color: Colors.transparent,
           ),
         );
       },
     );
   }
 
-  static dismissLoader() {
+  static dismissOverlay() {
     if (_context != null && _context!.mounted) {
       Navigator.pop(_context!);
     }

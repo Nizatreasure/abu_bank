@@ -30,7 +30,10 @@ class Accounts {
           (data['data'] as List).forEach((element) {
             accounts.add(AccountModel.fromJson(element));
           });
-          return {'status': true, 'data': accounts};
+          return {
+            'status': true,
+            'data': {'hasSetPin': data['hasSetPin'], 'data': accounts}
+          };
         } else {
           return {'status': false, 'message': data['message']};
         }
@@ -89,13 +92,19 @@ class Accounts {
         final data = jsonDecode(response.body);
 
         if (data['status'].toString().toLowerCase() == 'success') {
+          print('here');
           return {'status': true};
         } else {
-          return {'status': false, 'message': data['message']};
+          print('instread');
+          return {
+            'status': false,
+            'message': data['data'] ?? 'Failed to set pin'
+          };
         }
       }
       throw (Error());
     } catch (_) {
+      print('throw');
       return {'status': false, 'message': 'An error occurred'};
     }
   }
