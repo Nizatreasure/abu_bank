@@ -94,7 +94,7 @@ class _ComfirmTranferSectionWidgetState
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Text(
-                        'Comfirm Tansaction',
+                        'Confirm Tansaction',
                         style: AbuBankTheme.of(context).bodyMedium.override(
                               fontFamily: 'Poppins',
                               color: AbuBankTheme.of(context).primaryText,
@@ -341,6 +341,9 @@ class _ComfirmTranferSectionWidgetState
                           controller: _model.textController,
                           obscureText: false,
                           maxLength: 4,
+                          onChanged: (value) {
+                            setState(() {});
+                          },
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly
                           ],

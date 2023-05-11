@@ -382,3 +382,18 @@ class _SetNewPinState extends State<SetNewPin> {
     );
   }
 }
+
+void setPin(BuildContext context) {
+  showModalBottomSheet(
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    barrierColor: Color(0x00000000),
+    context: context,
+    builder: (bottomSheetContext) {
+      return Padding(
+        padding: MediaQuery.of(bottomSheetContext).viewInsets,
+        child: SetNewPin(),
+      );
+    },
+  );
+}

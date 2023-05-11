@@ -408,7 +408,7 @@ class _ComfirmTranferWidgetState extends State<ComfirmTranferWidget> {
                                                 EdgeInsetsDirectional.fromSTEB(
                                                     10.0, 0.0, 0.0, 0.0),
                                             child: Text(
-                                              'This is a very long note for me to see everything i a m doing This is a very long note for me to see everything i a m doing This is a very long note for me to see everything i a m doing This is a very long note for me to see everything i a m doing',
+                                              widget.note,
                                               style: AbuBankTheme.of(context)
                                                   .bodyMedium,
                                               overflow: TextOverflow.ellipsis,
