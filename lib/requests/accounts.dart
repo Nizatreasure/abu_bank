@@ -259,4 +259,48 @@ class Accounts {
       return {'status': false, 'message': 'An error occurred'};
     }
   }
+
+  static Future<Map<String, dynamic>> withdraw({
+    required String bankName,
+    required String accountNumber,
+    required String accountName,
+    required String accountKey,
+    required String amount,
+    required String description,
+  }) async {
+    String url = '$baseUrl/api/api.php?action=withdraw';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode({
+          'account_key': accountKey,
+          'amount': amount,
+          'bank_name': bankName,
+          'account_number': accountNumber,
+          'account_name': accountName,
+          'user_id': userData!.userId,
+          'description': description,
+        }),
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(const Duration(seconds: 90));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print(data);
+
+        if (data['status'].toString().toLowerCase() == 'success') {
+          return {'status': true};
+        } else {
+          return {
+            'status': false,
+            'message': data['message'] ?? 'Withdrawal failed'
+          };
+        }
+      }
+      throw (Error());
+    } catch (_) {
+      return {'status': false, 'message': 'An error occurred'};
+    }
+  }
 }

@@ -631,7 +631,8 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                   ),
                   style: AbuBankTheme.of(context).bodyMedium.override(
                         fontFamily: 'Roboto',
-                        color: isBalanceSufficient(_model.textController6!)
+                        color: isBalanceSufficient(
+                                _model.textController6!, context)
                             ? AbuBankTheme.of(context).primaryText
                             : AbuBankTheme.of(context).error,
                       ),
@@ -721,7 +722,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
               onPressed: _model.textController5.text.trim().length != 10 ||
                       _model.textController6.text.trim().isEmpty ||
                       selectedBank == null ||
-                      !isBalanceSufficient(_model.textController6!)
+                      !isBalanceSufficient(_model.textController6!, context)
                   ? null
                   : () async {
                       if (!provider.hasSetPin) {
@@ -1336,7 +1337,8 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                   ),
                   style: AbuBankTheme.of(context).bodyMedium.override(
                         fontFamily: 'Roboto',
-                        color: isBalanceSufficient(_model.textController9!)
+                        color: isBalanceSufficient(
+                                _model.textController9!, context)
                             ? AbuBankTheme.of(context).primaryText
                             : AbuBankTheme.of(context).error,
                       ),
@@ -1428,7 +1430,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                       _beneficiaryBankController.text.trim().isEmpty ||
                       _beneficiaryNameController.text.trim().isEmpty ||
                       _swiftCodeController.text.trim().isEmpty ||
-                      !isBalanceSufficient(_model.textController9!)
+                      !isBalanceSufficient(_model.textController9!, context)
                   ? null
                   : () async {
                       if (!provider.hasSetPin) {
@@ -1509,13 +1511,16 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
       ),
     );
   }
+}
 
-  bool isBalanceSufficient(TextEditingController controller) {
-    return double.parse(notListeningProvider.selectedAccount?.balance ??
-            notListeningProvider.accounts![0].balance) >=
-        double.parse(RemoveThousandSeparator(controller.text.trim().length > 1
-                ? controller.text.trim().substring(1).trim().toString()
-                : '0')
-            .toString());
-  }
+bool isBalanceSufficient(
+    TextEditingController controller, BuildContext context) {
+  AccountDataProvider provider =
+      Provider.of<AccountDataProvider>(context, listen: false);
+  return double.parse(
+          provider.selectedAccount?.balance ?? provider.accounts![0].balance) >=
+      double.parse(RemoveThousandSeparator(controller.text.trim().length > 1
+              ? controller.text.trim().substring(1).trim().toString()
+              : '0')
+          .toString());
 }

@@ -16,6 +16,7 @@ class ComfirmTranferWidget extends StatefulWidget {
   final String amount;
   final String note;
   final String currencySign;
+  final bool isTransfer;
   const ComfirmTranferWidget({
     Key? key,
     required this.beneficiaryName,
@@ -25,6 +26,7 @@ class ComfirmTranferWidget extends StatefulWidget {
     required this.amount,
     required this.note,
     required this.currencySign,
+    this.isTransfer = true,
   }) : super(key: key);
 
   @override
@@ -109,7 +111,7 @@ class _ComfirmTranferWidgetState extends State<ComfirmTranferWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(5.0, 0.0, 0.0, 0.0),
                       child: Text(
-                        'Transfer Information',
+                        '${widget.isTransfer ? 'Transfer' : 'Withdraw'} Information',
                         style: AbuBankTheme.of(context).headlineMedium,
                       ),
                     ),

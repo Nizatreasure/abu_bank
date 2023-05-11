@@ -13,10 +13,12 @@ class TransferSuscessfulWidget extends StatefulWidget {
   final String amount;
   final String beneficiaryName;
   final String currencySign;
+  final bool isTransfer;
   const TransferSuscessfulWidget({
     required this.amount,
     required this.beneficiaryName,
     required this.currencySign,
+    this.isTransfer = true,
     Key? key,
   }) : super(key: key);
 
@@ -83,7 +85,7 @@ class _TransferSuscessfulWidgetState extends State<TransferSuscessfulWidget> {
                           padding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 5.0, 0.0, 5.0),
                           child: Text(
-                            'Transfer successful!',
+                            '${widget.isTransfer ? 'Transfer' : 'Withrawal'} successful!',
                             style:
                                 AbuBankTheme.of(context).displaySmall.override(
                                       fontFamily: 'Poppins',
@@ -92,7 +94,7 @@ class _TransferSuscessfulWidgetState extends State<TransferSuscessfulWidget> {
                           ),
                         ),
                         Text(
-                          'You have successfully transferred ',
+                          'You have successfully ${widget.isTransfer ? 'transferred' : 'withdrawn'} ',
                           style: AbuBankTheme.of(context).bodyMedium,
                         ),
                         Row(
