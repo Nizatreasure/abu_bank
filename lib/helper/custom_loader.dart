@@ -19,7 +19,7 @@ class CustomOverlay {
           child: Container(
             height: double.infinity,
             width: double.infinity,
-            color: Colors.red.withOpacity(0.3),
+            color: Colors.black.withOpacity(0.2),
           ),
         );
       },

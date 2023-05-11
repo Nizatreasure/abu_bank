@@ -346,7 +346,7 @@ class _ComfirmTranferWidgetState extends State<ComfirmTranferWidget> {
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             10.0, 0.0, 0.0, 0.0),
                                         child: Text(
-                                          '${widget.currencySign} 20.86',
+                                          '${widget.currencySign} 0.00',
                                           style: AbuBankTheme.of(context)
                                               .bodyMedium
                                               .copyWith(fontFamily: 'Roboto'),
@@ -361,71 +361,72 @@ class _ComfirmTranferWidgetState extends State<ComfirmTranferWidget> {
                         ),
                       ],
                     ),
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 10.0, 0.0, 0.0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    5.0, 0.0, 0.0, 5.0),
-                                child: Text(
-                                  'Transaction Note',
-                                  style: AbuBankTheme.of(context).bodyMedium,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    4.0, 0.0, 0.0, 10.0),
-                                child: Container(
-                                  width: 332.0,
-                                  height: 75.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5.0),
-                                    border: Border.all(
-                                      color: AbuBankTheme.of(context).orange,
-                                      width: 2.0,
-                                    ),
+                    if (widget.note.isNotEmpty)
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 10.0, 0.0, 0.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      5.0, 0.0, 0.0, 5.0),
+                                  child: Text(
+                                    'Transaction Note',
+                                    style: AbuBankTheme.of(context).bodyMedium,
                                   ),
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 5.0, 0.0, 0.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                          child: Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    10.0, 0.0, 0.0, 0.0),
-                                            child: Text(
-                                              widget.note,
-                                              style: AbuBankTheme.of(context)
-                                                  .bodyMedium,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 3,
+                                ),
+                                Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      4.0, 0.0, 0.0, 10.0),
+                                  child: Container(
+                                    width: 332.0,
+                                    height: 75.0,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5.0),
+                                      border: Border.all(
+                                        color: AbuBankTheme.of(context).orange,
+                                        width: 2.0,
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0.0, 5.0, 0.0, 0.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            child: Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(
+                                                      10.0, 0.0, 0.0, 0.0),
+                                              child: Text(
+                                                widget.note,
+                                                style: AbuBankTheme.of(context)
+                                                    .bodyMedium,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 3,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
                     Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,

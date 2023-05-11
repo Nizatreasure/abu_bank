@@ -130,7 +130,7 @@ class _TransferSuscessfulWidgetState extends State<TransferSuscessfulWidget> {
                                     .titleSmall
                                     .override(
                                       fontFamily: 'Poppins',
-                                      color: AbuBankTheme.of(context).primary,
+                                      color: AbuBankTheme.of(context).primary2,
                                       fontSize: 14.0,
                                       fontWeight: FontWeight.bold,
                                     ),

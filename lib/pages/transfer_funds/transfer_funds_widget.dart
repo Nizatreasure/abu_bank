@@ -35,6 +35,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
       TextEditingController();
   final TextEditingController _beneficiaryBankController =
       TextEditingController();
+  final TextEditingController _swiftCodeController = TextEditingController();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -45,14 +46,16 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
       : 0;
 
   BankModel? selectedBank;
+  bool loading = false;
+  late AccountDataProvider notListeningProvider;
 
   @override
   void initState() {
     super.initState();
-    AccountDataProvider provider =
+    notListeningProvider =
         Provider.of<AccountDataProvider>(context, listen: false);
-    if (provider.banks == null) {
-      provider.getBanks();
+    if (notListeningProvider.banks == null) {
+      notListeningProvider.getBanks();
     }
     _model = createModel(context, () => TransferFundsModel());
 
@@ -358,8 +361,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                                             ),
                                           ),
                                           Container(
-                                            color: Colors.red,
-                                            height: index == 0 ? 400 : 450,
+                                            height: index == 0 ? 400 : 550,
                                             child: PageView(
                                               physics:
                                                   const NeverScrollableScrollPhysics(),
@@ -581,6 +583,9 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                     PrefixAdd(provider.selectedAccount?.currencySign ??
                         provider.accounts![0].currencySign),
                   ],
+                  onChanged: (value) {
+                    setState(() {});
+                  },
                   decoration: InputDecoration(
                     labelText: 'Enter Amount',
                     enabledBorder: UnderlineInputBorder(
@@ -626,7 +631,9 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                   ),
                   style: AbuBankTheme.of(context).bodyMedium.override(
                         fontFamily: 'Roboto',
-                        color: AbuBankTheme.of(context).primaryText,
+                        color: isBalanceSufficient(_model.textController6!)
+                            ? AbuBankTheme.of(context).primaryText
+                            : AbuBankTheme.of(context).error,
                       ),
                   keyboardType: TextInputType.number,
                   validator:
@@ -710,9 +717,11 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
           Padding(
             padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
             child: FFButtonWidget(
+              fingerprintLoading: loading,
               onPressed: _model.textController5.text.trim().length != 10 ||
                       _model.textController6.text.trim().isEmpty ||
-                      selectedBank == null
+                      selectedBank == null ||
+                      !isBalanceSufficient(_model.textController6!)
                   ? null
                   : () async {
                       if (!provider.hasSetPin) {
@@ -776,8 +785,20 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
 
                       if (confirm) {
                         enterPin(
-                            provider: provider,
-                            beneficiaryName: beneficiaryName);
+                          provider: provider,
+                          beneficiaryName: beneficiaryName,
+                          amount: RemoveThousandSeparator(_model
+                                  .textController6.text
+                                  .trim()
+                                  .substring(1)
+                                  .trim())
+                              .toString(),
+                          isLocal: true,
+                          bankName: selectedBank!.name,
+                          beneficiaryAccount:
+                              _model.textController5.text.trim(),
+                          description: _model.textController7.text.trim(),
+                        );
                       }
                     },
               text: 'Confirm',
@@ -805,9 +826,16 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
     );
   }
 
-  enterPin(
-      {required AccountDataProvider provider,
-      required String beneficiaryName}) async {
+  enterPin({
+    required AccountDataProvider provider,
+    required String beneficiaryName,
+    required bool isLocal,
+    required String amount,
+    required String beneficiaryAccount,
+    required String description,
+    required String bankName,
+    String? swiftCode,
+  }) async {
     String? pin = await showModalBottomSheet(
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -819,11 +847,9 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
           child: Container(
             child: ComfirmTranferSectionWidget(
               accountNumber: provider.selectedAccount!.accountNumber,
-              amount: RemoveThousandSeparator(
-                      _model.textController6.text.trim().substring(1).trim())
-                  .toString(),
-              bankName: selectedBank!.name,
-              beneficiaryAccount: _model.textController5.text.trim(),
+              amount: amount,
+              bankName: bankName,
+              beneficiaryAccount: beneficiaryAccount,
               beneficiaryName: beneficiaryName,
               currencySign: provider.selectedAccount!.currencySign,
             ),
@@ -834,26 +860,46 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
 
     if (pin != null) {
       CustomOverlay.showOverlay(context);
-
+      setState(() {
+        loading = true;
+      });
       final response = await Accounts.verifyPin(pin);
       CustomOverlay.dismissOverlay();
-
+      setState(() {
+        loading = false;
+      });
+      await Future.delayed(const Duration(milliseconds: 1));
       if (response['status']) {
         CustomOverlay.showOverlay(context);
+        setState(() {
+          loading = true;
+        });
 
-        final transferResponse = await Accounts.localTransfer(
-          bankName: selectedBank!.name,
-          accountNumber: _model.textController5.text.trim(),
-          accountName: beneficiaryName,
-          accountKey: provider.selectedAccount!.accountKey,
-          amount: RemoveThousandSeparator(
-                  _model.textController6.text.trim().substring(1).trim())
-              .toString(),
-          description: _model.textController7.text.trim(),
-        );
+        final transferResponse = isLocal
+            ? await Accounts.localTransfer(
+                bankName: bankName,
+                accountNumber: beneficiaryAccount,
+                accountName: beneficiaryName,
+                accountKey: provider.selectedAccount!.accountKey,
+                amount: amount,
+                description: description,
+              )
+            : await Accounts.internationalTransfer(
+                bankName: bankName,
+                accountNumber: beneficiaryAccount,
+                accountName: beneficiaryName,
+                accountKey: provider.selectedAccount!.accountKey,
+                amount: amount,
+                description: description,
+                swiftCode: swiftCode!,
+              );
+        setState(() {
+          loading = false;
+        });
         CustomOverlay.dismissOverlay();
 
         if (transferResponse['status']) {
+          notListeningProvider.getAccountDetails();
           Navigator.pushReplacement(
             context,
             PageTransition(
@@ -862,9 +908,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
               duration: Duration(milliseconds: 300),
               reverseDuration: Duration(milliseconds: 300),
               child: TransferSuscessfulWidget(
-                amount: RemoveThousandSeparator(
-                        _model.textController6.text.trim().substring(1).trim())
-                    .toString(),
+                amount: amount,
                 beneficiaryName: beneficiaryName,
                 currencySign: provider.selectedAccount!.currencySign,
               ),
@@ -900,7 +944,16 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
           ),
         );
         await Future.delayed(const Duration(milliseconds: 1000));
-        enterPin(provider: provider, beneficiaryName: beneficiaryName);
+        enterPin(
+          provider: provider,
+          beneficiaryName: beneficiaryName,
+          beneficiaryAccount: beneficiaryAccount,
+          amount: amount,
+          isLocal: isLocal,
+          swiftCode: swiftCode,
+          description: description,
+          bankName: bankName,
+        );
       }
     }
   }
@@ -1003,6 +1056,10 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                 child: TextFormField(
                   controller: _beneficiaryBankController,
                   obscureText: false,
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                  textCapitalization: TextCapitalization.words,
                   decoration: InputDecoration(
                     labelText: 'Beneficiary Bank',
                     enabledBorder: UnderlineInputBorder(
@@ -1073,8 +1130,86 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
               child: Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(15.0, 0.0, 20.0, 0.0),
                 child: TextFormField(
-                  controller: _beneficiaryNameController,
+                  controller: _swiftCodeController,
                   obscureText: false,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Swift Code',
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0x00000000),
+                        width: 1.0,
+                      ),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(4.0),
+                        topRight: Radius.circular(4.0),
+                      ),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0x00000000),
+                        width: 1.0,
+                      ),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(4.0),
+                        topRight: Radius.circular(4.0),
+                      ),
+                    ),
+                    errorBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0x00000000),
+                        width: 1.0,
+                      ),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(4.0),
+                        topRight: Radius.circular(4.0),
+                      ),
+                    ),
+                    focusedErrorBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0x00000000),
+                        width: 1.0,
+                      ),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(4.0),
+                        topRight: Radius.circular(4.0),
+                      ),
+                    ),
+                  ),
+                  style: AbuBankTheme.of(context).bodyMedium.override(
+                        fontFamily: 'Poppins',
+                        color: AbuBankTheme.of(context).primaryText,
+                      ),
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 10.0),
+            child: Container(
+              width: 332.0,
+              height: 55.0,
+              decoration: BoxDecoration(
+                color: Color(0x12000000),
+                borderRadius: BorderRadius.circular(5.0),
+                border: Border.all(
+                  color: AbuBankTheme.of(context).orange,
+                  width: 2.0,
+                ),
+              ),
+              child: Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(15.0, 0.0, 20.0, 0.0),
+                child: TextFormField(
+                  controller: _beneficiaryNameController,
+                  textCapitalization: TextCapitalization.words,
+                  obscureText: false,
+                  onChanged: (value) {
+                    setState(() {});
+                  },
                   decoration: InputDecoration(
                     labelText: 'Beneficiary Name',
                     enabledBorder: UnderlineInputBorder(
@@ -1147,6 +1282,9 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                 child: TextFormField(
                   controller: _model.textController9,
                   obscureText: false,
+                  onChanged: (value) {
+                    setState(() {});
+                  },
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
                     ThousandsSeparatorInputFormatter(),
@@ -1198,7 +1336,9 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                   ),
                   style: AbuBankTheme.of(context).bodyMedium.override(
                         fontFamily: 'Roboto',
-                        color: AbuBankTheme.of(context).primaryText,
+                        color: isBalanceSufficient(_model.textController9!)
+                            ? AbuBankTheme.of(context).primaryText
+                            : AbuBankTheme.of(context).error,
                       ),
                   keyboardType: TextInputType.number,
                   validator:
@@ -1282,116 +1422,69 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
           Padding(
             padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
             child: FFButtonWidget(
-              onPressed: () async {
-                if (_model.textController6.text.trim().isEmpty ||
-                    _model.textController8.text.trim().length != 10 ||
-                    _beneficiaryBankController.text.trim().isEmpty ||
-                    _beneficiaryNameController.text.trim().isEmpty) {
-                  return;
-                }
-                bool confirm = await Navigator.push(
-                      context,
-                      PageTransition(
-                        type: PageTransitionType.scale,
-                        alignment: Alignment.bottomCenter,
-                        duration: Duration(milliseconds: 300),
-                        reverseDuration: Duration(milliseconds: 300),
-                        child: ComfirmTranferWidget(
-                          accountNumber: '',
-                          note: _model.textController7.text.trim(),
+              fingerprintLoading: loading,
+              onPressed: _model.textController8.text.trim().isEmpty ||
+                      _model.textController9.text.trim().isEmpty ||
+                      _beneficiaryBankController.text.trim().isEmpty ||
+                      _beneficiaryNameController.text.trim().isEmpty ||
+                      _swiftCodeController.text.trim().isEmpty ||
+                      !isBalanceSufficient(_model.textController9!)
+                  ? null
+                  : () async {
+                      if (!provider.hasSetPin) {
+                        setPin(context);
+
+                        return;
+                      }
+                      bool confirm = await Navigator.push(
+                            context,
+                            PageTransition(
+                              type: PageTransitionType.scale,
+                              alignment: Alignment.bottomCenter,
+                              duration: Duration(milliseconds: 300),
+                              reverseDuration: Duration(milliseconds: 300),
+                              child: ComfirmTranferWidget(
+                                accountNumber:
+                                    provider.selectedAccount!.accountNumber,
+                                note: _model.textController10.text.trim(),
+                                amount: RemoveThousandSeparator(_model
+                                        .textController9.text
+                                        .trim()
+                                        .substring(1)
+                                        .trim())
+                                    .toString(),
+                                bankName:
+                                    _beneficiaryBankController.text.trim(),
+                                beneficiaryAccount:
+                                    _model.textController8.text.trim(),
+                                beneficiaryName:
+                                    _beneficiaryNameController.text.trim(),
+                                currencySign:
+                                    provider.selectedAccount!.currencySign,
+                              ),
+                            ),
+                          ) ??
+                          false;
+                      if (confirm) {
+                        enterPin(
+                          provider: provider,
+                          beneficiaryName:
+                              _beneficiaryNameController.text.trim(),
+                          description: _model.textController10.text.trim(),
+                          beneficiaryAccount:
+                              _model.textController8.text.trim(),
+                          swiftCode: _swiftCodeController.text.trim(),
+                          isLocal: false,
+                          bankName: _beneficiaryBankController.text.trim(),
                           amount: RemoveThousandSeparator(_model
-                                  .textController6.text
+                                  .textController9.text
                                   .trim()
                                   .substring(1)
                                   .trim())
                               .toString(),
-                          bankName: _beneficiaryBankController.text.trim(),
-                          beneficiaryAccount:
-                              _model.textController8.text.trim(),
-                          beneficiaryName:
-                              _beneficiaryNameController.text.trim(),
-                          currencySign: provider.selectedAccount!.currencySign,
-                        ),
-                      ),
-                    ) ??
-                    false;
-                if (confirm) {
-                  String? pin = await showModalBottomSheet(
-                    isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
-                    barrierColor: Color(0x00000000),
-                    context: context,
-                    builder: (bottomSheetContext) {
-                      return Padding(
-                        padding: MediaQuery.of(bottomSheetContext).viewInsets,
-                        child: Container(
-                          height: MediaQuery.of(context).size.height * 0.65,
-                          child: ComfirmTranferSectionWidget(
-                            accountNumber: '',
-                            amount: RemoveThousandSeparator(_model
-                                    .textController6.text
-                                    .trim()
-                                    .substring(1)
-                                    .trim())
-                                .toString(),
-                            bankName: _beneficiaryBankController.text.trim(),
-                            beneficiaryAccount:
-                                _model.textController8.text.trim(),
-                            beneficiaryName:
-                                _beneficiaryNameController.text.trim(),
-                            currencySign:
-                                provider.selectedAccount!.currencySign,
-                          ),
-                        ),
-                      );
+                        );
+                      }
                     },
-                  );
-
-                  if (pin != null) {
-                    //make network call
-                    final response = await Accounts.verifyPin(pin);
-                    if (response['status']) {
-                      //make transfer call
-
-                      Navigator.push(
-                        context,
-                        PageTransition(
-                          type: PageTransitionType.scale,
-                          alignment: Alignment.bottomCenter,
-                          duration: Duration(milliseconds: 300),
-                          reverseDuration: Duration(milliseconds: 300),
-                          child: TransferSuscessfulWidget(
-                            amount: RemoveThousandSeparator(_model
-                                    .textController6.text
-                                    .trim()
-                                    .substring(1)
-                                    .trim())
-                                .toString(),
-                            beneficiaryName:
-                                _beneficiaryNameController.text.trim(),
-                            currencySign:
-                                provider.selectedAccount!.currencySign,
-                          ),
-                        ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            response['message'],
-                            style: AbuBankTheme.of(context).titleSmall.override(
-                                  fontFamily: 'Poppins',
-                                  color: AbuBankTheme.of(context).primary3,
-                                ),
-                          ),
-                          duration: Duration(milliseconds: 4000),
-                          backgroundColor: AbuBankTheme.of(context).error,
-                        ),
-                      );
-                    }
-                  }
-                }
-              },
               text: 'Confirm',
               options: FFButtonOptions(
                 width: 130.0,
@@ -1415,5 +1508,14 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
         ],
       ),
     );
+  }
+
+  bool isBalanceSufficient(TextEditingController controller) {
+    return double.parse(notListeningProvider.selectedAccount?.balance ??
+            notListeningProvider.accounts![0].balance) >=
+        double.parse(RemoveThousandSeparator(controller.text.trim().length > 1
+                ? controller.text.trim().substring(1).trim().toString()
+                : '0')
+            .toString());
   }
 }

@@ -200,11 +200,57 @@ class Accounts {
         final data = jsonDecode(response.body);
 
         if (data['status'].toString().toLowerCase() == 'success') {
-          return {'status': true, 'data': data['']};
+          return {'status': true};
         } else {
           return {
             'status': false,
             'message': data['data'] ?? 'Failed to send money'
+          };
+        }
+      }
+      throw (Error());
+    } catch (_) {
+      return {'status': false, 'message': 'An error occurred'};
+    }
+  }
+
+  static Future<Map<String, dynamic>> internationalTransfer({
+    required String bankName,
+    required String accountNumber,
+    required String accountName,
+    required String accountKey,
+    required String amount,
+    required String description,
+    required String swiftCode,
+  }) async {
+    String url = '$baseUrl/api/api.php?action=interTransfer';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode({
+          'account_key': accountKey,
+          'amount': amount,
+          'bank_name': bankName,
+          'account_number': accountNumber,
+          'account_name': accountName,
+          'swiftcode:': swiftCode,
+          'user_id': userData!.userId,
+          'description': description,
+        }),
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(const Duration(seconds: 90));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        print(data);
+        if (data['status'].toString().toLowerCase() == 'success') {
+          return {'status': true};
+        } else {
+          return {
+            'status': false,
+            'message': data['message'] ?? 'Failed to send money'
           };
         }
       }
