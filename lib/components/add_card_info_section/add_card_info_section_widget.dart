@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import '../../theme/abu_bank_theme.dart';
 import '../../theme/abu_bank_util.dart';
 import '../../theme/abu_bank_widgets.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'add_card_info_section_model.dart';
+
 export 'add_card_info_section_model.dart';
 
 class AddCardInfoSectionWidget extends StatefulWidget {
@@ -544,7 +546,7 @@ class _AddCardInfoSectionWidgetState extends State<AddCardInfoSectionWidget> {
                             15.0, 0.0, 20.0, 0.0),
                         child: TextFormField(
                           controller: _model.textController6,
-                          obscureText: false,
+                          obscureText: true,
                           decoration: InputDecoration(
                             labelText: 'Enter Your 4 Digit Pin',
                             enabledBorder: UnderlineInputBorder(

@@ -339,7 +339,7 @@ class _ComfirmTranferSectionWidgetState
                             15.0, 0.0, 20.0, 0.0),
                         child: TextFormField(
                           controller: _model.textController,
-                          obscureText: false,
+                          obscureText: true,
                           maxLength: 4,
                           onChanged: (value) {
                             setState(() {});

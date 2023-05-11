@@ -1,11 +1,13 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import '/main.dart';
+import '/pages/login_page/login_page_widget.dart';
 import '../../theme/abu_bank_theme.dart';
 import '../../theme/abu_bank_util.dart';
 import '../../theme/abu_bank_widgets.dart';
-import '/main.dart';
-import '/pages/login_page/login_page_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'forgot_password_model.dart';
+
 export 'forgot_password_model.dart';
 
 class ForgotPasswordWidget extends StatefulWidget {
@@ -1282,8 +1284,7 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                                         duration: Duration(milliseconds: 300),
                                         reverseDuration:
                                             Duration(milliseconds: 300),
-                                        child:
-                                            NavBarPage(initialPage: 'HomePage'),
+                                        child: NavBarPage(),
                                       ),
                                     );
                                     ScaffoldMessenger.of(context).showSnackBar(

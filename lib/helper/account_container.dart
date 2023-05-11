@@ -9,7 +9,8 @@ import '../main.dart';
 import '../theme/abu_bank_theme.dart';
 
 class AccountContainer extends StatefulWidget {
-  const AccountContainer({Key? key}) : super(key: key);
+  final List<TextEditingController>? amountControllers;
+  const AccountContainer({this.amountControllers, Key? key}) : super(key: key);
 
   @override
   State<AccountContainer> createState() => _AccountContainerState();
@@ -58,6 +59,11 @@ class _AccountContainerState extends State<AccountContainer> {
 
               if (accountModel == null) return;
               accountDataProvider.changeSelectedAccount(accountModel);
+              if (widget.amountControllers != null) {
+                widget.amountControllers!.forEach((element) {
+                  element.text = '';
+                });
+              }
             },
             child: Container(
               width: 332.0,

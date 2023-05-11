@@ -1,4 +1,5 @@
 import 'package:abu_bank/providers/account_data_provider.dart';
+import 'package:abu_bank/providers/tab_provider.dart';
 import 'package:abu_bank/theme/abu_bank_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -56,6 +57,7 @@ class _MyAppState extends State<MyApp> {
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => AccountDataProvider()),
+          ChangeNotifierProvider(create: (context) => TabProvider()),
         ],
         child: MaterialApp(
           title: 'Abu Bank',
@@ -80,10 +82,7 @@ class _MyAppState extends State<MyApp> {
 }
 
 class NavBarPage extends StatefulWidget {
-  NavBarPage({Key? key, this.initialPage, this.page}) : super(key: key);
-
-  final String? initialPage;
-  final Widget? page;
+  NavBarPage({Key? key}) : super(key: key);
 
   @override
   _NavBarPageState createState() => _NavBarPageState();
@@ -91,33 +90,23 @@ class NavBarPage extends StatefulWidget {
 
 /// This is the private State class that goes with NavBarPage.
 class _NavBarPageState extends State<NavBarPage> {
-  String _currentPageName = 'HomePage';
-  late Widget? _currentPage;
-
-  @override
-  void initState() {
-    super.initState();
-    _currentPageName = widget.initialPage ?? _currentPageName;
-    _currentPage = widget.page;
-  }
+  final tabs = [
+    HomePageWidget(),
+    TransferFundsWidget(),
+    WithdrawFundsWidget(),
+    SettingspageWidget(),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final tabs = {
-      'HomePage': HomePageWidget(),
-      'TransferFunds': TransferFundsWidget(),
-      'WithdrawPage': WithdrawFundsWidget(),
-      'Settingspage': SettingspageWidget(),
-    };
-    final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
+    TabProvider tabProvider = Provider.of<TabProvider>(context);
     return Scaffold(
-      body: _currentPage ?? tabs[_currentPageName],
+      body: tabs[tabProvider.currentTab],
       bottomNavigationBar: GNav(
-        selectedIndex: currentIndex,
-        onTabChange: (i) => setState(() {
-          _currentPage = null;
-          _currentPageName = tabs.keys.toList()[i];
-        }),
+        selectedIndex: tabProvider.currentTab,
+        onTabChange: (i) {
+          tabProvider.changeTab(i);
+        },
         backgroundColor: AbuBankTheme.of(context).primary3,
         color: Color(0x8A000000),
         activeColor: AbuBankTheme.of(context).primary,

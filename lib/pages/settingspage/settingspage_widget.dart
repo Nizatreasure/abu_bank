@@ -1,14 +1,17 @@
-import '../../theme/abu_bank_theme.dart';
-import '../../theme/abu_bank_util.dart';
-import '../../theme/abu_bank_widgets.dart';
-import '/main.dart';
+import 'package:abu_bank/providers/tab_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+
 import '/pages/chnage_password/chnage_password_widget.dart';
 import '/pages/languagepage/languagepage_widget.dart';
 import '/pages/login_page/login_page_widget.dart';
 import '/pages/notification/notification_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../theme/abu_bank_theme.dart';
+import '../../theme/abu_bank_util.dart';
+import '../../theme/abu_bank_widgets.dart';
 import 'settingspage_model.dart';
+
 export 'settingspage_model.dart';
 
 class SettingspageWidget extends StatefulWidget {
@@ -551,16 +554,8 @@ class _SettingspageWidgetState extends State<SettingspageWidget> {
                       highlightColor: Colors.transparent,
                       onTap: () async {
                         setDarkModeSetting(context, ThemeMode.light);
-                        await Navigator.push(
-                          context,
-                          PageTransition(
-                            type: PageTransitionType.scale,
-                            alignment: Alignment.bottomCenter,
-                            duration: Duration(milliseconds: 300),
-                            reverseDuration: Duration(milliseconds: 300),
-                            child: NavBarPage(initialPage: 'HomePage'),
-                          ),
-                        );
+                        Provider.of<TabProvider>(context, listen: false)
+                            .changeTab(0);
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width * 1.0,
@@ -625,17 +620,8 @@ class _SettingspageWidgetState extends State<SettingspageWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
-                        setDarkModeSetting(context, ThemeMode.dark);
-                        await Navigator.push(
-                          context,
-                          PageTransition(
-                            type: PageTransitionType.scale,
-                            alignment: Alignment.bottomCenter,
-                            duration: Duration(milliseconds: 300),
-                            reverseDuration: Duration(milliseconds: 300),
-                            child: NavBarPage(initialPage: 'HomePage'),
-                          ),
-                        );
+                        Provider.of<TabProvider>(context, listen: false)
+                            .changeTab(0);
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width * 1.0,

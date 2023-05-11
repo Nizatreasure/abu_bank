@@ -311,7 +311,7 @@ class _TransactionreportWidgetState extends State<TransactionreportWidget> {
                                                           .bodyMedium
                                                           .override(
                                                             fontFamily:
-                                                                'Poppins',
+                                                                'Roboto',
                                                             color: history
                                                                         .type ==
                                                                     'debit'

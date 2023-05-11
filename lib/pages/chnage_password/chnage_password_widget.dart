@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
+
 import '../../theme/abu_bank_theme.dart';
 import '../../theme/abu_bank_util.dart';
 import '../../theme/abu_bank_widgets.dart';
-import '/main.dart';
-import 'package:flutter/material.dart';
 import 'chnage_password_model.dart';
+
 export 'chnage_password_model.dart';
 
 class ChnagePasswordWidget extends StatefulWidget {
@@ -497,21 +498,7 @@ class _ChnagePasswordWidgetState extends State<ChnagePasswordWidget> {
                                           textColor:
                                               AbuBankTheme.of(context).primary3,
                                           onPressed: () async {
-                                            await Navigator.push(
-                                              context,
-                                              PageTransition(
-                                                type: PageTransitionType.scale,
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                duration:
-                                                    Duration(milliseconds: 300),
-                                                reverseDuration:
-                                                    Duration(milliseconds: 300),
-                                                child: NavBarPage(
-                                                    initialPage:
-                                                        'Settingspage'),
-                                              ),
-                                            );
+                                            Navigator.pop(context);
                                           },
                                         ),
                                       ),

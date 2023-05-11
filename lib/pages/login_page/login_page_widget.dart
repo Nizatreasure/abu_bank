@@ -558,7 +558,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
           alignment: Alignment.bottomCenter,
           duration: Duration(milliseconds: 300),
           reverseDuration: Duration(milliseconds: 300),
-          child: NavBarPage(initialPage: 'HomePage'),
+          child: NavBarPage(),
         ),
         (route) => false,
       );

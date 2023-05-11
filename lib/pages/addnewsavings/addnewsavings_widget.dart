@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 import '/components/choose_accoun_section/choose_accoun_section_widget.dart';
 import '/components/choosetimedeposit_section/choosetimedeposit_section_widget.dart';
-import '/main.dart';
 import '/pages/transfer_suscessful/transfer_suscessful_widget.dart';
+import '../../providers/tab_provider.dart';
 import '../../theme/abu_bank_theme.dart';
 import '../../theme/abu_bank_util.dart';
 import '../../theme/abu_bank_widgets.dart';
@@ -91,16 +92,8 @@ class _AddnewsavingsWidgetState extends State<AddnewsavingsWidget> {
                               ) ??
                               false;
                           if (confirmDialogResponse) {
-                            await Navigator.push(
-                              context,
-                              PageTransition(
-                                type: PageTransitionType.scale,
-                                alignment: Alignment.bottomCenter,
-                                duration: Duration(milliseconds: 300),
-                                reverseDuration: Duration(milliseconds: 300),
-                                child: NavBarPage(initialPage: 'TransferFunds'),
-                              ),
-                            );
+                            Provider.of<TabProvider>(context, listen: false)
+                                .changeTab(1);
                           }
                         },
                         child: Icon(

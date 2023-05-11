@@ -1,10 +1,12 @@
+import 'package:flutter/material.dart';
+
+import '/main.dart';
+import '/pages/login_page/login_page_widget.dart';
 import '../../theme/abu_bank_theme.dart';
 import '../../theme/abu_bank_util.dart';
 import '../../theme/abu_bank_widgets.dart';
-import '/main.dart';
-import '/pages/login_page/login_page_widget.dart';
-import 'package:flutter/material.dart';
 import 'register_page_model.dart';
+
 export 'register_page_model.dart';
 
 class RegisterPageWidget extends StatefulWidget {
@@ -486,8 +488,7 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
                                         duration: Duration(milliseconds: 300),
                                         reverseDuration:
                                             Duration(milliseconds: 300),
-                                        child:
-                                            NavBarPage(initialPage: 'HomePage'),
+                                        child: NavBarPage(),
                                       ),
                                     );
                                   },

@@ -38,7 +38,11 @@ class TransactionHistoryModel {
     id = json['id'] ?? '';
     userId = json['user_id'] ?? '';
     accountKey = json['account_key'] ?? '';
-    type = json['type'] ?? '';
+    type = json['type'] == null
+        ? ''
+        : json['type'].toString().contains('deb')
+            ? 'debit'
+            : json['type'];
     currencySign = json['currency_sign'] ?? '';
     currency = json['currency'] ?? '';
     descType = json['desc_type'] ?? '';

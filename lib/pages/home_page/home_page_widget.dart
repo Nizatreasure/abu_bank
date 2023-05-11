@@ -5,12 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-import '/main.dart';
 import '/pages/notification/notification_widget.dart';
 import '/pages/saveonline/saveonline_widget.dart';
 import '/pages/transactionreport/transactionreport_widget.dart';
-import '/pages/withdraw_funds/withdraw_funds_widget.dart';
 import '../../helper/mask_string.dart';
+import '../../providers/tab_provider.dart';
 import '../../theme/abu_bank_theme.dart';
 import '../../theme/abu_bank_util.dart';
 import 'account_details.dart';
@@ -79,18 +78,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               hoverColor: Colors.transparent,
                               highlightColor: Colors.transparent,
                               onTap: () async {
-                                await Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    type: PageTransitionType.scale,
-                                    alignment: Alignment.bottomCenter,
-                                    duration: Duration(milliseconds: 300),
-                                    reverseDuration:
-                                        Duration(milliseconds: 300),
-                                    child:
-                                        NavBarPage(initialPage: 'Settingspage'),
-                                  ),
-                                );
+                                Provider.of<TabProvider>(context, listen: false)
+                                    .changeTab(3);
                               },
                               child: Container(
                                 width: 35.0,
@@ -252,22 +241,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                             hoverColor: Colors.transparent,
                                             highlightColor: Colors.transparent,
                                             onTap: () async {
-                                              await Navigator.push(
-                                                context,
-                                                PageTransition(
-                                                  type:
-                                                      PageTransitionType.scale,
-                                                  alignment:
-                                                      Alignment.bottomCenter,
-                                                  duration: Duration(
-                                                      milliseconds: 300),
-                                                  reverseDuration: Duration(
-                                                      milliseconds: 300),
-                                                  child: NavBarPage(
-                                                      initialPage:
-                                                          'TransferFunds'),
-                                                ),
-                                              );
+                                              Provider.of<TabProvider>(context,
+                                                      listen: false)
+                                                  .changeTab(1);
                                             },
                                             child: Container(
                                               width: 100.0,
@@ -321,20 +297,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                             hoverColor: Colors.transparent,
                                             highlightColor: Colors.transparent,
                                             onTap: () async {
-                                              await Navigator.push(
-                                                context,
-                                                PageTransition(
-                                                  type:
-                                                      PageTransitionType.scale,
-                                                  alignment:
-                                                      Alignment.bottomCenter,
-                                                  duration: Duration(
-                                                      milliseconds: 300),
-                                                  reverseDuration: Duration(
-                                                      milliseconds: 300),
-                                                  child: WithdrawFundsWidget(),
-                                                ),
-                                              );
+                                              Provider.of<TabProvider>(context,
+                                                      listen: false)
+                                                  .changeTab(2);
                                             },
                                             child: Container(
                                               width: 100.0,
