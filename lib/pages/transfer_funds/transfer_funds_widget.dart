@@ -256,7 +256,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                                                                           0.0,
                                                                           0.0),
                                                               child: Text(
-                                                                'Transfer to\nthe same bank',
+                                                                'Transfer to\nlocal bank',
                                                                 style: AbuBankTheme.of(
                                                                         context)
                                                                     .bodySmall
@@ -335,7 +335,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                                                                           0.0,
                                                                           0.0),
                                                               child: Text(
-                                                                'Transfer to\nanother bank',
+                                                                'Transfer to\ninternational bank',
                                                                 style: AbuBankTheme.of(
                                                                         context)
                                                                     .bodySmall
@@ -357,7 +357,8 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                                             ),
                                           ),
                                           Container(
-                                            height: 350,
+                                            color: Colors.red,
+                                            height: index == 0 ? 400 : 450,
                                             child: PageView(
                                               physics:
                                                   const NeverScrollableScrollPhysics(),
@@ -369,9 +370,9 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                                               controller:
                                                   _model.pageViewController,
                                               children: [
-                                                _transferSameBank(
+                                                _transferLocalBank(
                                                     accountDataProvider),
-                                                _transferOtherBank(
+                                                _transferInternationalBank(
                                                     accountDataProvider)
                                               ],
                                             ),
@@ -392,13 +393,96 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
     );
   }
 
-  Widget _transferSameBank(AccountDataProvider provider) {
+  Widget _transferLocalBank(AccountDataProvider provider) {
     return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(10.0, 20.0, 10.0, 10.0),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 10.0),
+            child: Container(
+              width: 332.0,
+              height: 55.0,
+              decoration: BoxDecoration(
+                color: Color(0x12000000),
+                borderRadius: BorderRadius.circular(5.0),
+                border: Border.all(
+                  color: AbuBankTheme.of(context).orange,
+                  width: 2.0,
+                ),
+              ),
+              child: InkWell(
+                splashColor: Colors.transparent,
+                focusColor: Colors.transparent,
+                hoverColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onTap: () async {
+                  BankModel? bank = await showModalBottomSheet(
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    barrierColor: Color(0x00000000),
+                    context: context,
+                    builder: (bottomSheetContext) {
+                      return Padding(
+                        padding: MediaQuery.of(bottomSheetContext).viewInsets,
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.65,
+                          child: ChooseBankSectionWidget(selectedBank),
+                        ),
+                      );
+                    },
+                  );
+
+                  if (bank == null) return;
+                  setState(() {
+                    selectedBank = bank;
+                  });
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(15.0, 0.0, 0.0, 0.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            selectedBank == null
+                                ? 'Choose Bank'
+                                : selectedBank!.name,
+                            style: AbuBankTheme.of(context).bodyMedium.override(
+                                  fontFamily: 'Poppins',
+                                  color: AbuBankTheme.of(context).primaryText,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 10.0, 0.0),
+                          child: Icon(
+                            Icons.account_balance_rounded,
+                            color: AbuBankTheme.of(context).primaryText,
+                            size: 24.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
           Padding(
             padding: EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 10.0),
             child: Container(
@@ -626,7 +710,8 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
             padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
             child: FFButtonWidget(
               onPressed: _model.textController5.text.trim().length != 10 ||
-                      _model.textController6.text.trim().isEmpty
+                      _model.textController6.text.trim().isEmpty ||
+                      selectedBank == null
                   ? null
                   : () async {
                       if (!provider.hasSetPin) {
@@ -634,6 +719,32 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
 
                         return;
                       }
+                      String beneficiaryName = '';
+                      final responseData = await Accounts.getBeneficiary(
+                          bankCode: selectedBank!.code,
+                          accountNumber: _model.textController5.text.trim());
+
+                      if (!responseData['status']) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              responseData['message'],
+                              style: AbuBankTheme.of(context)
+                                  .titleSmall
+                                  .override(
+                                    fontFamily: 'Poppins',
+                                    color: AbuBankTheme.of(context).primary3,
+                                  ),
+                            ),
+                            duration: Duration(milliseconds: 4000),
+                            backgroundColor: AbuBankTheme.of(context).error,
+                          ),
+                        );
+                        return;
+                      }
+                      beneficiaryName = responseData['data'];
+                      print(beneficiaryName);
+
                       bool confirm = await Navigator.push(
                             context,
                             PageTransition(
@@ -642,7 +753,8 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                               duration: Duration(milliseconds: 300),
                               reverseDuration: Duration(milliseconds: 300),
                               child: ComfirmTranferWidget(
-                                accountNumber: '',
+                                accountNumber:
+                                    provider.selectedAccount!.accountNumber,
                                 note: _model.textController7.text.trim(),
                                 amount: RemoveThousandSeparator(_model
                                         .textController6.text
@@ -650,10 +762,10 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                                         .substring(1)
                                         .trim())
                                     .toString(),
-                                bankName: 'Abu Bank',
+                                bankName: selectedBank!.name,
                                 beneficiaryAccount:
                                     _model.textController5.text.trim(),
-                                beneficiaryName: '',
+                                beneficiaryName: beneficiaryName,
                                 currencySign:
                                     provider.selectedAccount!.currencySign,
                               ),
@@ -765,96 +877,13 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
     );
   }
 
-  Widget _transferOtherBank(AccountDataProvider provider) {
+  Widget _transferInternationalBank(AccountDataProvider provider) {
     return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(10.0, 20.0, 10.0, 10.0),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 10.0),
-            child: Container(
-              width: 332.0,
-              height: 55.0,
-              decoration: BoxDecoration(
-                color: Color(0x12000000),
-                borderRadius: BorderRadius.circular(5.0),
-                border: Border.all(
-                  color: AbuBankTheme.of(context).orange,
-                  width: 2.0,
-                ),
-              ),
-              child: InkWell(
-                splashColor: Colors.transparent,
-                focusColor: Colors.transparent,
-                hoverColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                onTap: () async {
-                  BankModel? bank = await showModalBottomSheet(
-                    isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
-                    barrierColor: Color(0x00000000),
-                    context: context,
-                    builder: (bottomSheetContext) {
-                      return Padding(
-                        padding: MediaQuery.of(bottomSheetContext).viewInsets,
-                        child: Container(
-                          height: MediaQuery.of(context).size.height * 0.65,
-                          child: ChooseBankSectionWidget(selectedBank),
-                        ),
-                      );
-                    },
-                  );
-
-                  if (bank == null) return;
-                  setState(() {
-                    selectedBank = bank;
-                  });
-                },
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(15.0, 0.0, 0.0, 0.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            selectedBank == null
-                                ? 'Choose Bank'
-                                : selectedBank!.name,
-                            style: AbuBankTheme.of(context).bodyMedium.override(
-                                  fontFamily: 'Poppins',
-                                  color: AbuBankTheme.of(context).primaryText,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 10.0, 0.0),
-                          child: Icon(
-                            Icons.account_balance_rounded,
-                            color: AbuBankTheme.of(context).primaryText,
-                            size: 24.0,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
           Padding(
             padding: EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 10.0),
             child: Container(

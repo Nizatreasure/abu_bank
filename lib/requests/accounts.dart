@@ -14,13 +14,10 @@ class Accounts {
       final response = await http.post(
         Uri.parse(url),
         body: jsonEncode({
-          'user_id': 23,
+          'user_id': userData!.userId,
         }),
         headers: {'Content-Type': 'application/json'},
       ).timeout(const Duration(seconds: 90));
-
-      print(response.statusCode);
-      print(response.reasonPhrase);
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -51,7 +48,7 @@ class Accounts {
       final response = await http.post(
         Uri.parse(url),
         body: jsonEncode({
-          'user_id': 23,
+          'user_id': userData!.userId,
         }),
         headers: {'Content-Type': 'application/json'},
       ).timeout(const Duration(seconds: 90));
@@ -82,7 +79,7 @@ class Accounts {
       final response = await http.post(
         Uri.parse(url),
         body: jsonEncode({
-          'user_id': 23,
+          'user_id': userData!.userId,
           'pin_code': pin,
         }),
         headers: {'Content-Type': 'application/json'},
@@ -92,10 +89,8 @@ class Accounts {
         final data = jsonDecode(response.body);
 
         if (data['status'].toString().toLowerCase() == 'success') {
-          print('here');
           return {'status': true};
         } else {
-          print('instread');
           return {
             'status': false,
             'message': data['data'] ?? 'Failed to set pin'
@@ -104,7 +99,6 @@ class Accounts {
       }
       throw (Error());
     } catch (_) {
-      print('throw');
       return {'status': false, 'message': 'An error occurred'};
     }
   }
@@ -116,7 +110,7 @@ class Accounts {
       final response = await http.post(
         Uri.parse(url),
         body: jsonEncode({
-          'user_id': 23,
+          'user_id': userData!.userId,
           'pin_code': pin,
         }),
         headers: {'Content-Type': 'application/json'},
@@ -129,6 +123,87 @@ class Accounts {
           return {'status': true};
         } else {
           return {'status': false, 'message': data['data'] ?? 'Incorrect pin'};
+        }
+      }
+      throw (Error());
+    } catch (_) {
+      return {'status': false, 'message': 'An error occurred'};
+    }
+  }
+
+  static Future<Map<String, dynamic>> getBeneficiary(
+      {required String bankCode, required String accountNumber}) async {
+    String url = '$baseUrl/api/api.php?action=lookup';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode({
+          'bank_code': bankCode,
+          'account_number': accountNumber,
+        }),
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(const Duration(seconds: 90));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print(data);
+        if (data['status'].toString().toLowerCase() == 'success') {
+          if (data['data']['status'].toString().toLowerCase() == 'error') {
+            return {
+              'status': false,
+              'message': 'Could not resolve beneficiary'
+            };
+          }
+          return {'status': true, 'data': data['data']['account_name']};
+        } else {
+          return {
+            'status': false,
+            'message': data['data'] ?? 'Could not resolve beneficiary'
+          };
+        }
+      }
+      throw (Error());
+    } catch (_) {
+      return {'status': false, 'message': 'An error occurred'};
+    }
+  }
+
+  static Future<Map<String, dynamic>> localTransfer({
+    required String bankName,
+    required String accountNumber,
+    required String accountName,
+    required String accountKey,
+    required String amount,
+    required String description,
+  }) async {
+    String url = '$baseUrl/api/api.php?action=localTransfer';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode({
+          'account_key': accountKey,
+          'amount': amount,
+          'bank_name': bankName,
+          'account_number': accountNumber,
+          'account_name': accountName,
+          'user_id': userData!.userId,
+          'description': description,
+        }),
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(const Duration(seconds: 90));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        if (data['status'].toString().toLowerCase() == 'success') {
+          return {'status': true, 'data': data['']};
+        } else {
+          return {
+            'status': false,
+            'message': data['data'] ?? 'Failed to send money'
+          };
         }
       }
       throw (Error());
