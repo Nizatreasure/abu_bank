@@ -1,8 +1,10 @@
 import 'package:abu_bank/helper/account_container.dart';
 import 'package:abu_bank/helper/thousand_separator.dart';
+import 'package:abu_bank/providers/account_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 import '../../helper/prefix_add.dart';
 import '../../theme/abu_bank_theme.dart';
@@ -246,7 +248,10 @@ class _WithdrawFundsWidgetState extends State<WithdrawFundsWidget> {
                                   inputFormatters: [
                                     FilteringTextInputFormatter.digitsOnly,
                                     ThousandsSeparatorInputFormatter(),
-                                    PrefixAdd('\u20A6'),
+                                    PrefixAdd(context
+                                        .read<AccountDataProvider>()
+                                        .selectedAccount!
+                                        .currencySign),
                                   ],
                                   decoration: InputDecoration(
                                     labelText: 'Enter Amount to Send',

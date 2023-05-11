@@ -13,9 +13,11 @@ export 'transfer_suscessful_model.dart';
 class TransferSuscessfulWidget extends StatefulWidget {
   final String amount;
   final String beneficiaryName;
+  final String currencySign;
   const TransferSuscessfulWidget({
     required this.amount,
     required this.beneficiaryName,
+    required this.currencySign,
     Key? key,
   }) : super(key: key);
 
@@ -105,7 +107,7 @@ class _TransferSuscessfulWidgetState extends State<TransferSuscessfulWidget> {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     0.0, 0.0, 5.0, 0.0),
                                 child: Text(
-                                  '\u20A6 ${numberFormat.format(double.parse(widget.amount.toString()))}',
+                                  '${widget.currencySign} ${numberFormat.format(double.parse(widget.amount.toString()))}',
                                   style: AbuBankTheme.of(context)
                                       .bodyMedium
                                       .override(

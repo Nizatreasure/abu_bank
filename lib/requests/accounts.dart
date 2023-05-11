@@ -71,4 +71,60 @@ class Accounts {
       return {'status': false, 'message': 'An error occurred'};
     }
   }
+
+  static Future<Map<String, dynamic>> createPin(String pin) async {
+    String url = '$baseUrl/api/api.php?action=pincode';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode({
+          'user_id': 23,
+          'pin_code': pin,
+        }),
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(const Duration(seconds: 90));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        if (data['status'].toString().toLowerCase() == 'success') {
+          return {'status': true};
+        } else {
+          return {'status': false, 'message': data['message']};
+        }
+      }
+      throw (Error());
+    } catch (_) {
+      return {'status': false, 'message': 'An error occurred'};
+    }
+  }
+
+  static Future<Map<String, dynamic>> verifyPin(String pin) async {
+    String url = '$baseUrl/api/api.php?action=verifyCode';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode({
+          'user_id': 23,
+          'pin_code': pin,
+        }),
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(const Duration(seconds: 90));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        if (data['status'].toString().toLowerCase() == 'success') {
+          return {'status': true};
+        } else {
+          return {'status': false, 'message': data['data'] ?? 'Incorrect pin'};
+        }
+      }
+      throw (Error());
+    } catch (_) {
+      return {'status': false, 'message': 'An error occurred'};
+    }
+  }
 }

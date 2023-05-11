@@ -1,6 +1,8 @@
 class AccountModel {
   late String id;
   late String type;
+  late String currency;
+  late String currencySign;
   late String accountNumber;
   late String accountRoutine;
   late String balance;
@@ -12,6 +14,8 @@ class AccountModel {
   // AccountModel(
   //     {this.id,
   //     this.type,
+  //     this.currency,
+  //     this.currencySign,
   //     this.accountNumber,
   //     this.accountRoutine,
   //     this.balance,
@@ -23,10 +27,12 @@ class AccountModel {
   AccountModel.fromJson(Map<String, dynamic> json) {
     id = json['id'] ?? '';
     type = json['type'] ?? '';
+    currency = json['currency'] ?? 'NGN';
+    currencySign = json['currency_sign'] ?? '\u20A6';
     accountNumber = json['account_number'] ?? '';
     accountRoutine = json['account_routine'] ?? '';
-    balance = json['balance'] ?? '';
-    pendingBalance = json['pending_balance'] ?? '';
+    balance = json['balance'] ?? '0';
+    pendingBalance = json['pending_balance'] ?? '0';
     accountKey = json['account_key'] ?? '';
     date = json['date'] ?? '';
     status = json['status'] ?? '';
@@ -36,6 +42,8 @@ class AccountModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['type'] = this.type;
+    data['currency'] = this.currency;
+    data['currency_sign'] = this.currencySign;
     data['account_number'] = this.accountNumber;
     data['account_routine'] = this.accountRoutine;
     data['balance'] = this.balance;

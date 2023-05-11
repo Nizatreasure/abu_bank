@@ -224,7 +224,7 @@ class _ChooseAccounSectionWidgetState extends State<ChooseAccounSectionWidget> {
                                             mainAxisSize: MainAxisSize.max,
                                             children: [
                                               Text(
-                                                '\u20A6 ${numberFormat.format(double.parse(accountDataProvider.accounts![e].balance))}',
+                                                '${accountDataProvider.accounts![e].currencySign} ${numberFormat.format(double.parse(accountDataProvider.accounts![e].balance))}',
                                                 style: AbuBankTheme.of(context)
                                                     .titleMedium
                                                     .override(

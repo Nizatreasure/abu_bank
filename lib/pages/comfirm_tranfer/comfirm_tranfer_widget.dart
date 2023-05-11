@@ -15,6 +15,7 @@ class ComfirmTranferWidget extends StatefulWidget {
   final String accountNumber;
   final String amount;
   final String note;
+  final String currencySign;
   const ComfirmTranferWidget({
     Key? key,
     required this.beneficiaryName,
@@ -23,6 +24,7 @@ class ComfirmTranferWidget extends StatefulWidget {
     required this.accountNumber,
     required this.amount,
     required this.note,
+    required this.currencySign,
   }) : super(key: key);
 
   @override
@@ -344,7 +346,7 @@ class _ComfirmTranferWidgetState extends State<ComfirmTranferWidget> {
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             10.0, 0.0, 0.0, 0.0),
                                         child: Text(
-                                          '\u20A6 20.86',
+                                          '${widget.currencySign} 20.86',
                                           style: AbuBankTheme.of(context)
                                               .bodyMedium
                                               .copyWith(fontFamily: 'Roboto'),
@@ -466,7 +468,7 @@ class _ComfirmTranferWidgetState extends State<ComfirmTranferWidget> {
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             10.0, 0.0, 0.0, 0.0),
                                         child: Text(
-                                          '\u20A6 ${numberFormat.format(double.parse(widget.amount.toString()))}',
+                                          '${widget.currencySign} ${numberFormat.format(double.parse(widget.amount.toString()))}',
                                           style: AbuBankTheme.of(context)
                                               .bodyMedium
                                               .override(

@@ -439,6 +439,7 @@ class _AddnewsavingsWidgetState extends State<AddnewsavingsWidget> {
                                 child: TransferSuscessfulWidget(
                                   amount: '',
                                   beneficiaryName: '',
+                                  currencySign: '',
                                 ),
                               ),
                             );

@@ -9,12 +9,14 @@ class AccountSummaryWidget extends StatefulWidget {
   final double accountBalance;
   final int index;
   final int totalAccounts;
+  final String currencySign;
   const AccountSummaryWidget({
     Key? key,
     required this.accountNumber,
     required this.accountBalance,
     required this.index,
     required this.totalAccounts,
+    required this.currencySign,
   }) : super(key: key);
 
   @override
@@ -103,7 +105,7 @@ class _AccountSummaryWidgetState extends State<AccountSummaryWidget> {
                     Expanded(
                       child: Text.rich(
                         TextSpan(
-                            text: '\u20A6 ',
+                            text: widget.currencySign,
                             style: TextStyle(fontFamily: 'Roboto'),
                             children: [
                               TextSpan(

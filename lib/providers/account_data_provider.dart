@@ -6,9 +6,16 @@ import 'package:flutter/material.dart';
 class AccountDataProvider extends ChangeNotifier {
   List<AccountModel>? accounts;
   bool loadingDetails = false;
+  AccountModel? selectedAccount;
 
   List<BankModel>? banks;
   bool loadingBanks = false;
+
+  changeSelectedAccount(AccountModel account) async {
+    selectedAccount = account;
+    await Future.delayed(const Duration(milliseconds: 1));
+    notifyListeners();
+  }
 
   Future<void> getAccountDetails() async {
     if (loadingDetails) return;

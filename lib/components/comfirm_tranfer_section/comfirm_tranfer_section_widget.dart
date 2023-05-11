@@ -15,6 +15,7 @@ class ComfirmTranferSectionWidget extends StatefulWidget {
   final String bankName;
   final String accountNumber;
   final String amount;
+  final String currencySign;
 
   const ComfirmTranferSectionWidget({
     Key? key,
@@ -23,6 +24,7 @@ class ComfirmTranferSectionWidget extends StatefulWidget {
     required this.bankName,
     required this.accountNumber,
     required this.amount,
+    required this.currencySign,
   }) : super(key: key);
 
   @override
@@ -296,7 +298,7 @@ class _ComfirmTranferSectionWidgetState
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Text(
-                        '\u20A6 ${numberFormat.format(double.parse(widget.amount.toString()))}',
+                        '${widget.currencySign} ${numberFormat.format(double.parse(widget.amount.toString()))}',
                         style: AbuBankTheme.of(context).bodyMedium.override(
                               fontFamily: 'Roboto',
                               color: AbuBankTheme.of(context).secondaryText,
@@ -412,10 +414,12 @@ class _ComfirmTranferSectionWidgetState
                     padding:
                         EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 10.0, 0.0),
                     child: FFButtonWidget(
-                      onPressed: () async {
-                        Navigator.pop(
-                            context, _model.textController.text.trim());
-                      },
+                      onPressed: _model.textController.text.trim().length < 4
+                          ? null
+                          : () async {
+                              Navigator.pop(
+                                  context, _model.textController.text.trim());
+                            },
                       text: 'Comfirm',
                       options: FFButtonOptions(
                         width: 130.0,

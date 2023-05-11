@@ -1,5 +1,6 @@
 import 'package:abu_bank/helper/account_container.dart';
 import 'package:abu_bank/models/bank_model.dart';
+import 'package:abu_bank/requests/accounts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -154,196 +155,241 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                                                   ),
                                             )),
                                       )
-                                    : child!;
-                          },
-                          child: Column(
-                            children: [
-                              AccountContainer(),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    10.0, 10.0, 10.0, 0.0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Text(
-                                      'Choose transaction',
-                                      style: AbuBankTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'Poppins',
-                                            color: AbuBankTheme.of(context)
-                                                .secondaryText,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    10.0, 20.0, 10.0, 0.0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          5.0, 0.0, 5.0, 0.0),
-                                      child: InkWell(
-                                        splashColor: Colors.transparent,
-                                        focusColor: Colors.transparent,
-                                        hoverColor: Colors.transparent,
-                                        highlightColor: Colors.transparent,
-                                        onTap: () async {
-                                          _model.pageViewController
-                                              ?.animateToPage(
-                                            0,
-                                            duration:
-                                                Duration(milliseconds: 300),
-                                            curve: Curves.ease,
-                                          );
-                                        },
-                                        child: Container(
-                                          width: 120.0,
-                                          height: 100.0,
-                                          decoration: BoxDecoration(
-                                            color: index == 0
-                                                ? AbuBankTheme.of(context)
-                                                    .primary
-                                                : Color(0x96777777),
-                                            borderRadius:
-                                                BorderRadius.circular(15.0),
-                                          ),
-                                          child: Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    15.0, 10.0, 0.0, 0.0),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Icon(
-                                                  Icons.person,
-                                                  color: Color(0xFFF2F1F9),
-                                                  size: 32.0,
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                          0.0, 10.0, 0.0, 0.0),
-                                                  child: Text(
-                                                    'Transfer to\nthe same bank',
-                                                    style: AbuBankTheme.of(
-                                                            context)
-                                                        .bodySmall
-                                                        .override(
-                                                          fontFamily: 'Poppins',
-                                                          color:
-                                                              Color(0xFFE0E0E0),
-                                                        ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          5.0, 0.0, 5.0, 0.0),
-                                      child: InkWell(
-                                        onTap: () {
-                                          _model.pageViewController
-                                              ?.animateToPage(
-                                            1,
-                                            duration:
-                                                Duration(milliseconds: 300),
-                                            curve: Curves.ease,
-                                          );
-                                        },
-                                        child: Container(
-                                          width: 120.0,
-                                          height: 100.0,
-                                          decoration: BoxDecoration(
-                                            color: index == 1
-                                                ? AbuBankTheme.of(context)
-                                                    .primary
-                                                : Color(0x96777777),
-                                            borderRadius:
-                                                BorderRadius.circular(15.0),
-                                          ),
-                                          child: Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    15.0, 10.0, 0.0, 0.0),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Icon(
-                                                  Icons.account_balance_rounded,
-                                                  color: Color(0xFFF2F1F9),
-                                                  size: 30.0,
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                          0.0, 10.0, 0.0, 0.0),
-                                                  child: Text(
-                                                    'Transfer to\nanother bank',
-                                                    style: AbuBankTheme.of(
-                                                            context)
-                                                        .bodySmall
-                                                        .override(
-                                                          fontFamily: 'Poppins',
-                                                          color:
-                                                              Color(0xFFE0E0E0),
-                                                        ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      width: double.infinity,
-                                      height:
-                                          MediaQuery.of(context).size.height,
-                                      child: PageView(
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        onPageChanged: (value) {
-                                          setState(() {
-                                            index = value;
-                                          });
-                                        },
-                                        controller: _model.pageViewController,
+                                    : Column(
                                         children: [
-                                          _transferSameBank(),
-                                          _transferOtherBank()
+                                          AccountContainer(),
+                                          Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    10.0, 10.0, 10.0, 0.0),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Text(
+                                                  'Choose transaction',
+                                                  style: AbuBankTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily: 'Poppins',
+                                                        color: AbuBankTheme.of(
+                                                                context)
+                                                            .secondaryText,
+                                                      ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    10.0, 20.0, 10.0, 0.0),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          5.0, 0.0, 5.0, 0.0),
+                                                  child: InkWell(
+                                                    splashColor:
+                                                        Colors.transparent,
+                                                    focusColor:
+                                                        Colors.transparent,
+                                                    hoverColor:
+                                                        Colors.transparent,
+                                                    highlightColor:
+                                                        Colors.transparent,
+                                                    onTap: () async {
+                                                      _model.pageViewController
+                                                          ?.animateToPage(
+                                                        0,
+                                                        duration: Duration(
+                                                            milliseconds: 300),
+                                                        curve: Curves.ease,
+                                                      );
+                                                    },
+                                                    child: Container(
+                                                      width: 120.0,
+                                                      height: 100.0,
+                                                      decoration: BoxDecoration(
+                                                        color: index == 0
+                                                            ? AbuBankTheme.of(
+                                                                    context)
+                                                                .primary
+                                                            : Color(0x96777777),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15.0),
+                                                      ),
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    15.0,
+                                                                    10.0,
+                                                                    0.0,
+                                                                    0.0),
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.max,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Icon(
+                                                              Icons.person,
+                                                              color: Color(
+                                                                  0xFFF2F1F9),
+                                                              size: 32.0,
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          10.0,
+                                                                          0.0,
+                                                                          0.0),
+                                                              child: Text(
+                                                                'Transfer to\nthe same bank',
+                                                                style: AbuBankTheme.of(
+                                                                        context)
+                                                                    .bodySmall
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          'Poppins',
+                                                                      color: Color(
+                                                                          0xFFE0E0E0),
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          5.0, 0.0, 5.0, 0.0),
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      _model.pageViewController
+                                                          ?.animateToPage(
+                                                        1,
+                                                        duration: Duration(
+                                                            milliseconds: 300),
+                                                        curve: Curves.ease,
+                                                      );
+                                                    },
+                                                    child: Container(
+                                                      width: 120.0,
+                                                      height: 100.0,
+                                                      decoration: BoxDecoration(
+                                                        color: index == 1
+                                                            ? AbuBankTheme.of(
+                                                                    context)
+                                                                .primary
+                                                            : Color(0x96777777),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15.0),
+                                                      ),
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    15.0,
+                                                                    10.0,
+                                                                    0.0,
+                                                                    0.0),
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.max,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Icon(
+                                                              Icons
+                                                                  .account_balance_rounded,
+                                                              color: Color(
+                                                                  0xFFF2F1F9),
+                                                              size: 30.0,
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          10.0,
+                                                                          0.0,
+                                                                          0.0),
+                                                              child: Text(
+                                                                'Transfer to\nanother bank',
+                                                                style: AbuBankTheme.of(
+                                                                        context)
+                                                                    .bodySmall
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          'Poppins',
+                                                                      color: Color(
+                                                                          0xFFE0E0E0),
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Expanded(
+                                                child: Container(
+                                                  width: double.infinity,
+                                                  height: MediaQuery.of(context)
+                                                      .size
+                                                      .height,
+                                                  child: PageView(
+                                                    physics:
+                                                        const NeverScrollableScrollPhysics(),
+                                                    onPageChanged: (value) {
+                                                      setState(() {
+                                                        index = value;
+                                                      });
+                                                    },
+                                                    controller: _model
+                                                        .pageViewController,
+                                                    children: [
+                                                      _transferSameBank(
+                                                          accountDataProvider),
+                                                      _transferOtherBank(
+                                                          accountDataProvider)
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                                      );
+                          },
                         ),
                       )
                     ],
@@ -357,7 +403,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
     );
   }
 
-  Widget _transferSameBank() {
+  Widget _transferSameBank(AccountDataProvider provider) {
     return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(10.0, 20.0, 10.0, 10.0),
       child: Column(
@@ -458,7 +504,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
                     ThousandsSeparatorInputFormatter(),
-                    PrefixAdd('\u20A6'),
+                    PrefixAdd(provider.selectedAccount!.currencySign),
                   ],
                   decoration: InputDecoration(
                     labelText: 'Enter Amount',
@@ -614,6 +660,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                           beneficiaryAccount:
                               _model.textController5.text.trim(),
                           beneficiaryName: '',
+                          currencySign: provider.selectedAccount!.currencySign,
                         ),
                       ),
                     ) ??
@@ -642,6 +689,8 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                             beneficiaryAccount:
                                 _model.textController5.text.trim(),
                             beneficiaryName: '',
+                            currencySign:
+                                provider.selectedAccount!.currencySign,
                           ),
                         ),
                       );
@@ -650,25 +699,44 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
 
                   if (pin != null) {
                     //make network call
-
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                        type: PageTransitionType.scale,
-                        alignment: Alignment.bottomCenter,
-                        duration: Duration(milliseconds: 300),
-                        reverseDuration: Duration(milliseconds: 300),
-                        child: TransferSuscessfulWidget(
-                          amount: RemoveThousandSeparator(_model
-                                  .textController6.text
-                                  .trim()
-                                  .substring(1)
-                                  .trim())
-                              .toString(),
-                          beneficiaryName: '',
+                    final response = await Accounts.verifyPin(pin);
+                    if (response['status']) {
+                      //make transfer call
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          type: PageTransitionType.scale,
+                          alignment: Alignment.bottomCenter,
+                          duration: Duration(milliseconds: 300),
+                          reverseDuration: Duration(milliseconds: 300),
+                          child: TransferSuscessfulWidget(
+                            amount: RemoveThousandSeparator(_model
+                                    .textController6.text
+                                    .trim()
+                                    .substring(1)
+                                    .trim())
+                                .toString(),
+                            beneficiaryName: '',
+                            currencySign:
+                                provider.selectedAccount!.currencySign,
+                          ),
                         ),
-                      ),
-                    );
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            response['message'],
+                            style: AbuBankTheme.of(context).titleSmall.override(
+                                  fontFamily: 'Poppins',
+                                  color: AbuBankTheme.of(context).primary3,
+                                ),
+                          ),
+                          duration: Duration(milliseconds: 4000),
+                          backgroundColor: AbuBankTheme.of(context).error,
+                        ),
+                      );
+                    }
                   }
                 }
               },
@@ -697,7 +765,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
     );
   }
 
-  Widget _transferOtherBank() {
+  Widget _transferOtherBank(AccountDataProvider provider) {
     return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(10.0, 20.0, 10.0, 10.0),
       child: Column(
@@ -1025,7 +1093,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
                     ThousandsSeparatorInputFormatter(),
-                    PrefixAdd('\u20A6'),
+                    PrefixAdd(provider.selectedAccount!.currencySign),
                   ],
                   decoration: InputDecoration(
                     labelText: 'Enter Amount',
@@ -1184,6 +1252,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                               _model.textController8.text.trim(),
                           beneficiaryName:
                               _beneficiaryNameController.text.trim(),
+                          currencySign: provider.selectedAccount!.currencySign,
                         ),
                       ),
                     ) ??
@@ -1212,6 +1281,8 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                                 _model.textController8.text.trim(),
                             beneficiaryName:
                                 _beneficiaryNameController.text.trim(),
+                            currencySign:
+                                provider.selectedAccount!.currencySign,
                           ),
                         ),
                       );
@@ -1220,25 +1291,45 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
 
                   if (pin != null) {
                     //make network call
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                        type: PageTransitionType.scale,
-                        alignment: Alignment.bottomCenter,
-                        duration: Duration(milliseconds: 300),
-                        reverseDuration: Duration(milliseconds: 300),
-                        child: TransferSuscessfulWidget(
-                          amount: RemoveThousandSeparator(_model
-                                  .textController6.text
-                                  .trim()
-                                  .substring(1)
-                                  .trim())
-                              .toString(),
-                          beneficiaryName:
-                              _beneficiaryNameController.text.trim(),
+                    final response = await Accounts.verifyPin(pin);
+                    if (response['status']) {
+                      //make transfer call
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          type: PageTransitionType.scale,
+                          alignment: Alignment.bottomCenter,
+                          duration: Duration(milliseconds: 300),
+                          reverseDuration: Duration(milliseconds: 300),
+                          child: TransferSuscessfulWidget(
+                            amount: RemoveThousandSeparator(_model
+                                    .textController6.text
+                                    .trim()
+                                    .substring(1)
+                                    .trim())
+                                .toString(),
+                            beneficiaryName:
+                                _beneficiaryNameController.text.trim(),
+                            currencySign:
+                                provider.selectedAccount!.currencySign,
+                          ),
                         ),
-                      ),
-                    );
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            response['message'],
+                            style: AbuBankTheme.of(context).titleSmall.override(
+                                  fontFamily: 'Poppins',
+                                  color: AbuBankTheme.of(context).primary3,
+                                ),
+                          ),
+                          duration: Duration(milliseconds: 4000),
+                          backgroundColor: AbuBankTheme.of(context).error,
+                        ),
+                      );
+                    }
                   }
                 }
               },

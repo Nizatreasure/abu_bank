@@ -226,6 +226,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                             index: i,
                                             totalAccounts:
                                                 accounts.accounts!.length,
+                                            currencySign: accounts
+                                                .accounts![i].currencySign,
                                           );
                                         },
                                       ).toList(),
