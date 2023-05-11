@@ -61,6 +61,8 @@ class Accounts {
           (data['data'] as List).forEach((element) {
             banks.add(BankModel.fromJson(element));
           });
+          banks.sort(
+              (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
           return {'status': true, 'data': banks};
         } else {
           return {'status': false, 'message': data['message']};

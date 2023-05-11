@@ -45,26 +45,35 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => AccountDataProvider()),
-      ],
-      child: MaterialApp(
-        title: 'Abu Bank',
-        localizationsDelegates: [
-          FFLocalizationsDelegate(),
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus &&
+            currentFocus.focusedChild != null) {
+          currentFocus.focusedChild!.unfocus();
+        }
+      },
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (context) => AccountDataProvider()),
         ],
-        locale: _locale,
-        supportedLocales: const [
-          Locale('en'),
-        ],
-        theme: ThemeData(brightness: Brightness.light),
-        darkTheme: ThemeData(brightness: Brightness.dark),
-        themeMode: _themeMode,
-        home: WelcomePageWidget(),
+        child: MaterialApp(
+          title: 'Abu Bank',
+          localizationsDelegates: [
+            FFLocalizationsDelegate(),
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          locale: _locale,
+          supportedLocales: const [
+            Locale('en'),
+          ],
+          theme: ThemeData(brightness: Brightness.light),
+          darkTheme: ThemeData(brightness: Brightness.dark),
+          themeMode: _themeMode,
+          home: WelcomePageWidget(),
+        ),
       ),
     );
   }

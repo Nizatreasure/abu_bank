@@ -1,3 +1,4 @@
+import 'package:abu_bank/helper/custom_loader.dart';
 import 'package:abu_bank/models/bank_model.dart';
 import 'package:abu_bank/pages/set_new_pin/set_new_pin.dart';
 import 'package:abu_bank/requests/accounts.dart';
@@ -720,10 +721,11 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                         return;
                       }
                       String beneficiaryName = '';
+                      CustomOverlay.showOverlay(context);
                       final responseData = await Accounts.getBeneficiary(
                           bankCode: selectedBank!.code,
                           accountNumber: _model.textController5.text.trim());
-
+                      CustomOverlay.dismissOverlay();
                       if (!responseData['status']) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -743,7 +745,6 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                         return;
                       }
                       beneficiaryName = responseData['data'];
-                      print(beneficiaryName);
 
                       bool confirm = await Navigator.push(
                             context,
@@ -774,82 +775,9 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                           false;
 
                       if (confirm) {
-                        String? pin = await showModalBottomSheet(
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          barrierColor: Color(0x00000000),
-                          context: context,
-                          builder: (bottomSheetContext) {
-                            return Padding(
-                              padding:
-                                  MediaQuery.of(bottomSheetContext).viewInsets,
-                              child: Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.65,
-                                child: ComfirmTranferSectionWidget(
-                                  accountNumber: '',
-                                  amount: RemoveThousandSeparator(_model
-                                          .textController6.text
-                                          .trim()
-                                          .substring(1)
-                                          .trim())
-                                      .toString(),
-                                  bankName: 'Abu Bank',
-                                  beneficiaryAccount:
-                                      _model.textController5.text.trim(),
-                                  beneficiaryName: '',
-                                  currencySign:
-                                      provider.selectedAccount!.currencySign,
-                                ),
-                              ),
-                            );
-                          },
-                        );
-
-                        if (pin != null) {
-                          //make network call
-                          final response = await Accounts.verifyPin(pin);
-                          if (response['status']) {
-                            //make transfer call
-                            Navigator.push(
-                              context,
-                              PageTransition(
-                                type: PageTransitionType.scale,
-                                alignment: Alignment.bottomCenter,
-                                duration: Duration(milliseconds: 300),
-                                reverseDuration: Duration(milliseconds: 300),
-                                child: TransferSuscessfulWidget(
-                                  amount: RemoveThousandSeparator(_model
-                                          .textController6.text
-                                          .trim()
-                                          .substring(1)
-                                          .trim())
-                                      .toString(),
-                                  beneficiaryName: '',
-                                  currencySign:
-                                      provider.selectedAccount!.currencySign,
-                                ),
-                              ),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  response['message'],
-                                  style: AbuBankTheme.of(context)
-                                      .titleSmall
-                                      .override(
-                                        fontFamily: 'Poppins',
-                                        color:
-                                            AbuBankTheme.of(context).primary3,
-                                      ),
-                                ),
-                                duration: Duration(milliseconds: 4000),
-                                backgroundColor: AbuBankTheme.of(context).error,
-                              ),
-                            );
-                          }
-                        }
+                        enterPin(
+                            provider: provider,
+                            beneficiaryName: beneficiaryName);
                       }
                     },
               text: 'Confirm',
@@ -875,6 +803,106 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
         ],
       ),
     );
+  }
+
+  enterPin(
+      {required AccountDataProvider provider,
+      required String beneficiaryName}) async {
+    String? pin = await showModalBottomSheet(
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      barrierColor: Color(0x00000000),
+      context: context,
+      builder: (bottomSheetContext) {
+        return Padding(
+          padding: MediaQuery.of(bottomSheetContext).viewInsets,
+          child: Container(
+            child: ComfirmTranferSectionWidget(
+              accountNumber: provider.selectedAccount!.accountNumber,
+              amount: RemoveThousandSeparator(
+                      _model.textController6.text.trim().substring(1).trim())
+                  .toString(),
+              bankName: selectedBank!.name,
+              beneficiaryAccount: _model.textController5.text.trim(),
+              beneficiaryName: beneficiaryName,
+              currencySign: provider.selectedAccount!.currencySign,
+            ),
+          ),
+        );
+      },
+    );
+
+    if (pin != null) {
+      CustomOverlay.showOverlay(context);
+
+      final response = await Accounts.verifyPin(pin);
+      CustomOverlay.dismissOverlay();
+
+      if (response['status']) {
+        CustomOverlay.showOverlay(context);
+
+        final transferResponse = await Accounts.localTransfer(
+          bankName: selectedBank!.name,
+          accountNumber: _model.textController5.text.trim(),
+          accountName: beneficiaryName,
+          accountKey: provider.selectedAccount!.accountKey,
+          amount: RemoveThousandSeparator(
+                  _model.textController6.text.trim().substring(1).trim())
+              .toString(),
+          description: _model.textController7.text.trim(),
+        );
+        CustomOverlay.dismissOverlay();
+
+        if (transferResponse['status']) {
+          Navigator.pushReplacement(
+            context,
+            PageTransition(
+              type: PageTransitionType.scale,
+              alignment: Alignment.bottomCenter,
+              duration: Duration(milliseconds: 300),
+              reverseDuration: Duration(milliseconds: 300),
+              child: TransferSuscessfulWidget(
+                amount: RemoveThousandSeparator(
+                        _model.textController6.text.trim().substring(1).trim())
+                    .toString(),
+                beneficiaryName: beneficiaryName,
+                currencySign: provider.selectedAccount!.currencySign,
+              ),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                transferResponse['message'],
+                style: AbuBankTheme.of(context).titleSmall.override(
+                      fontFamily: 'Poppins',
+                      color: AbuBankTheme.of(context).primary3,
+                    ),
+              ),
+              duration: Duration(milliseconds: 4000),
+              backgroundColor: AbuBankTheme.of(context).error,
+            ),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              response['message'],
+              style: AbuBankTheme.of(context).titleSmall.override(
+                    fontFamily: 'Poppins',
+                    color: AbuBankTheme.of(context).primary3,
+                  ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: AbuBankTheme.of(context).error,
+          ),
+        );
+        await Future.delayed(const Duration(milliseconds: 1000));
+        enterPin(provider: provider, beneficiaryName: beneficiaryName);
+      }
+    }
   }
 
   Widget _transferInternationalBank(AccountDataProvider provider) {
@@ -1324,6 +1352,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                     final response = await Accounts.verifyPin(pin);
                     if (response['status']) {
                       //make transfer call
+
                       Navigator.push(
                         context,
                         PageTransition(

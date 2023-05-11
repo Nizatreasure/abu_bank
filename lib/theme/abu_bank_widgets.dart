@@ -198,7 +198,16 @@ class _FFButtonWidgetState extends State<FFButtonWidget> {
       height: widget.options.height,
       width: widget.options.width,
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: onPressed == null
+            ? null
+            : () {
+                FocusScopeNode currentFocus = FocusScope.of(context);
+                if (!currentFocus.hasPrimaryFocus &&
+                    currentFocus.focusedChild != null) {
+                  currentFocus.focusedChild!.unfocus();
+                }
+                onPressed();
+              },
         style: style,
         child: textWidget,
       ),
