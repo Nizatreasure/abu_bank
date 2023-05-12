@@ -1,3 +1,4 @@
+import 'package:abu_bank/helper/constants.dart';
 import 'package:abu_bank/providers/tab_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -205,7 +206,7 @@ class _SettingspageWidgetState extends State<SettingspageWidget> {
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 0.0, 8.0, 0.0, 0.0),
                             child: Text(
-                              'Push Puttichai',
+                              '${userData?.firstName ?? ''} ${userData?.lastName ?? ''}',
                               style: AbuBankTheme.of(context)
                                   .headlineMedium
                                   .override(
@@ -224,7 +225,7 @@ class _SettingspageWidgetState extends State<SettingspageWidget> {
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 0.0, 4.0, 0.0, 0.0),
                             child: Text(
-                              'user.name@domainname.com',
+                              userData?.email ?? '',
                               style:
                                   AbuBankTheme.of(context).bodyMedium.override(
                                         fontFamily: 'Lexend Deca',

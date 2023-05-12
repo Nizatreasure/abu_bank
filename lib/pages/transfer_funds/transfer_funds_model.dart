@@ -1,12 +1,11 @@
+import 'package:flutter/material.dart';
+
 import '../../theme/abu_bank_util.dart';
 import '../../theme/form_field_controller.dart';
-import 'package:flutter/material.dart';
 
 class TransferFundsModel extends AbuBankModel {
   ///  State fields for stateful widgets in this page.
 
-  // State field(s) for PageView widget.
-  PageController? pageViewController;
   // State field(s) for TextField widget.
   TextEditingController? textController1;
   String? Function(BuildContext, String?)? textController1Validator;
