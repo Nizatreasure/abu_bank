@@ -939,7 +939,7 @@ class _WithdrawFundsWidgetState extends State<WithdrawFundsWidget> {
         if (withdrawResponse['status']) {
           Provider.of<AccountDataProvider>(context, listen: false)
               .getAccountDetails();
-          Navigator.pushReplacement(
+          Navigator.push(
             context,
             PageTransition(
               type: PageTransitionType.scale,

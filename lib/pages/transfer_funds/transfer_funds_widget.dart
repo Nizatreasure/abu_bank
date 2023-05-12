@@ -921,7 +921,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
 
         if (transferResponse['status']) {
           notListeningProvider.getAccountDetails();
-          Navigator.pushReplacement(
+          Navigator.push(
             context,
             PageTransition(
               type: PageTransitionType.scale,
