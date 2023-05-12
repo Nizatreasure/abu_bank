@@ -1,3 +1,4 @@
+import 'package:abu_bank/components/enter_beneficiary_name.dart';
 import 'package:abu_bank/helper/custom_loader.dart';
 import 'package:abu_bank/models/bank_model.dart';
 import 'package:abu_bank/pages/set_new_pin/set_new_pin.dart';
@@ -764,9 +765,16 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                             backgroundColor: AbuBankTheme.of(context).error,
                           ),
                         );
-                        return;
+
+                        await Future.delayed(Duration(milliseconds: 1000));
+                        String? name = await enterBeneficiaryName(context);
+
+                        if (name == null) return;
+                        beneficiaryName = name;
                       }
-                      beneficiaryName = responseData['data'];
+                      if (responseData['status']) {
+                        beneficiaryName = responseData['data'];
+                      }
 
                       bool confirm = await Navigator.push(
                             context,

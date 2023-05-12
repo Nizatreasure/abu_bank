@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 
 import '../../components/choose_bank_section/choose_bank_section_widget.dart';
 import '../../components/comfirm_tranfer_section/comfirm_tranfer_section_widget.dart';
+import '../../components/enter_beneficiary_name.dart';
 import '../../helper/custom_loader.dart';
 import '../../helper/prefix_add.dart';
 import '../../requests/accounts.dart';
@@ -782,9 +783,15 @@ class _WithdrawFundsWidgetState extends State<WithdrawFundsWidget> {
                           backgroundColor: AbuBankTheme.of(context).error,
                         ),
                       );
-                      return;
+                      await Future.delayed(Duration(milliseconds: 1000));
+                      String? name = await enterBeneficiaryName(context);
+
+                      if (name == null) return;
+                      beneficiaryName = name;
                     }
-                    beneficiaryName = responseData['data'];
+                    if (responseData['status']) {
+                      beneficiaryName = responseData['data'];
+                    }
 
                     bool confirm = await Navigator.push(
                           context,
