@@ -178,8 +178,11 @@ class _EnterBeneficiaryNameState extends State<EnterBeneficiaryName> {
                         onPressed: _accountNameController.text.trim().isEmpty
                             ? null
                             : () async {
-                                Navigator.pop(context,
-                                    _accountNameController.text.trim());
+                                Navigator.pop(
+                                    context,
+                                    _accountNameController.text
+                                        .trim()
+                                        .toUpperCase());
                               },
                         text: 'Continue',
                         options: FFButtonOptions(
