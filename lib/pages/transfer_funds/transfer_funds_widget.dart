@@ -932,6 +932,12 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                 amount: amount,
                 beneficiaryName: beneficiaryName,
                 currencySign: provider.selectedAccount!.currencySign,
+                beneficiaryAccount: beneficiaryAccount,
+                beneficiaryBank: bankName,
+                currency: provider.selectedAccount!.currency,
+                remark: description,
+                senderAccount: provider.selectedAccount!.accountNumber,
+                isTransfer: true,
               ),
             ),
           );

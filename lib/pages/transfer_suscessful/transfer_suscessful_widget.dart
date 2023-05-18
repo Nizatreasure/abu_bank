@@ -1,7 +1,14 @@
+import 'package:abu_bank/helper/add_pdf.dart';
+import 'package:abu_bank/providers/tab_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '/main.dart';
+import '../../helper/constants.dart';
+import '../../theme/abu_bank_icon_button.dart';
 import '../../theme/abu_bank_theme.dart';
 import '../../theme/abu_bank_util.dart';
 import '../../theme/abu_bank_widgets.dart';
@@ -14,12 +21,23 @@ class TransferSuscessfulWidget extends StatefulWidget {
   final String beneficiaryName;
   final String currencySign;
   final bool isTransfer;
+  final String currency;
+  final String beneficiaryBank;
+  final String senderAccount;
+  final String beneficiaryAccount;
+  final String remark;
+
   const TransferSuscessfulWidget({
     required this.amount,
     required this.beneficiaryName,
     required this.currencySign,
     this.isTransfer = true,
     Key? key,
+    required this.currency,
+    required this.beneficiaryBank,
+    required this.senderAccount,
+    required this.beneficiaryAccount,
+    required this.remark,
   }) : super(key: key);
 
   @override
@@ -45,6 +63,20 @@ class _TransferSuscessfulWidgetState extends State<TransferSuscessfulWidget> {
 
     _unfocusNode.dispose();
     super.dispose();
+  }
+
+  Future<String?> getPath(bool share) async {
+    return addPdf(
+        amount: widget.amount,
+        beneficiaryName: widget.beneficiaryName,
+        currency: widget.currency,
+        senderAccount: widget.senderAccount,
+        beneficiaryAccount: widget.beneficiaryAccount,
+        transactionType: widget.isTransfer ? 'Transfer' : 'Withdrawal',
+        beneficiaryBank: widget.beneficiaryBank,
+        remark: widget.remark,
+        share: share,
+        senderName: '${userData?.firstName ?? ''} ${userData?.lastName ?? ''}');
   }
 
   @override
@@ -150,6 +182,7 @@ class _TransferSuscessfulWidgetState extends State<TransferSuscessfulWidget> {
               padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
               child: FFButtonWidget(
                 onPressed: () {
+                  Provider.of<TabProvider>(context, listen: false).changeTab(0);
                   Navigator.pop(context);
                 },
                 text: 'Continue',
@@ -173,89 +206,66 @@ class _TransferSuscessfulWidgetState extends State<TransferSuscessfulWidget> {
                 ),
               ),
             ),
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Builder(
+                    builder: (context) => Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 5.0),
+                      child: AbuBankIconButton(
+                        borderColor: Colors.transparent,
+                        borderRadius: 30.0,
+                        borderWidth: 1.0,
+                        buttonSize: 60.0,
+                        fillColor: AbuBankTheme.of(context).primary3,
+                        icon: Icon(
+                          Icons.share_rounded,
+                          color: Colors.black,
+                          size: 30.0,
+                        ),
+                        onPressed: () async {
+                          String? path = await getPath(true);
+                          if (path == null) return;
 
-            // Padding(
-            //   padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
-            //   child: Row(
-            //     mainAxisSize: MainAxisSize.max,
-            //     mainAxisAlignment: MainAxisAlignment.center,
-            //     children: [
-            //       Builder(
-            //         builder: (context) => Padding(
-            //           padding:
-            //               EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 5.0),
-            //           child: AbuBankIconButton(
-            //             borderColor: Colors.transparent,
-            //             borderRadius: 30.0,
-            //             borderWidth: 1.0,
-            //             buttonSize: 60.0,
-            //             fillColor: AbuBankTheme.of(context).primary3,
-            //             icon: Icon(
-            //               Icons.share_rounded,
-            //               color: Colors.black,
-            //               size: 30.0,
-            //             ),
-            //             onPressed: () async {
-            //               await Share.share(
-            //                 'Share Receipt ',
-            //                 sharePositionOrigin:
-            //                     getWidgetBoundingBox(context),
-            //               );
-            //             },
-            //           ),
-            //         ),
-            //       ),
-            //       Padding(
-            //         padding:
-            //             EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 5.0),
-            //         child: AbuBankIconButton(
-            //           borderColor: Colors.transparent,
-            //           borderRadius: 30.0,
-            //           borderWidth: 1.0,
-            //           buttonSize: 60.0,
-            //           fillColor: AbuBankTheme.of(context).primary3,
-            //           icon: Icon(
-            //             Icons.download_rounded,
-            //             color: Colors.black,
-            //             size: 30.0,
-            //           ),
-            //           onPressed: () {
-            //             print('IconButton pressed ...');
-            //           },
-            //         ),
-            //       ),
-            //       Padding(
-            //         padding:
-            //             EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 5.0),
-            //         child: AbuBankIconButton(
-            //           borderColor: Colors.transparent,
-            //           borderRadius: 30.0,
-            //           borderWidth: 1.0,
-            //           buttonSize: 60.0,
-            //           fillColor: AbuBankTheme.of(context).primary3,
-            //           icon: Icon(
-            //             Icons.keyboard_return_rounded,
-            //             color: Colors.black,
-            //             size: 30.0,
-            //           ),
-            //           onPressed: () async {
-            //             await Navigator.pushAndRemoveUntil(
-            //               context,
-            //               PageTransition(
-            //                 type: PageTransitionType.scale,
-            //                 alignment: Alignment.bottomCenter,
-            //                 duration: Duration(milliseconds: 300),
-            //                 reverseDuration: Duration(milliseconds: 300),
-            //                 child: NavBarPage(initialPage: 'HomePage'),
-            //               ),
-            //               (r) => false,
-            //             );
-            //           },
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
+                          Share.shareXFiles(
+                            [XFile(path)],
+                            sharePositionOrigin: getWidgetBoundingBox(context),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 5.0),
+                    child: AbuBankIconButton(
+                      borderColor: Colors.transparent,
+                      borderRadius: 30.0,
+                      borderWidth: 1.0,
+                      buttonSize: 60.0,
+                      fillColor: AbuBankTheme.of(context).primary3,
+                      icon: Icon(
+                        Icons.download_rounded,
+                        color: Colors.black,
+                        size: 30.0,
+                      ),
+                      onPressed: () async {
+                        String? path = await getPath(false);
+                        Fluttertoast.showToast(
+                          msg: path == null
+                              ? 'Failed to download'
+                              : 'Receipt downloaded',
+                          gravity: ToastGravity.CENTER,
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

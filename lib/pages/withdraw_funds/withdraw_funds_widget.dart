@@ -951,6 +951,11 @@ class _WithdrawFundsWidgetState extends State<WithdrawFundsWidget> {
                 beneficiaryName: beneficiaryName,
                 currencySign: provider.selectedAccount!.currencySign,
                 isTransfer: false,
+                beneficiaryAccount: beneficiaryAccount,
+                beneficiaryBank: bankName,
+                remark: description,
+                currency: provider.selectedAccount!.currency,
+                senderAccount: provider.selectedAccount!.accountNumber,
               ),
             ),
           );

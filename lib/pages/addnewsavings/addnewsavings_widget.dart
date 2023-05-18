@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import '/components/choose_accoun_section/choose_accoun_section_widget.dart';
 import '/components/choosetimedeposit_section/choosetimedeposit_section_widget.dart';
-import '/pages/transfer_suscessful/transfer_suscessful_widget.dart';
 import '../../providers/tab_provider.dart';
 import '../../theme/abu_bank_theme.dart';
 import '../../theme/abu_bank_util.dart';
@@ -422,20 +421,20 @@ class _AddnewsavingsWidgetState extends State<AddnewsavingsWidget> {
                             10.0, 30.0, 10.0, 0.0),
                         child: FFButtonWidget(
                           onPressed: () async {
-                            await Navigator.push(
-                              context,
-                              PageTransition(
-                                type: PageTransitionType.scale,
-                                alignment: Alignment.bottomCenter,
-                                duration: Duration(milliseconds: 300),
-                                reverseDuration: Duration(milliseconds: 300),
-                                child: TransferSuscessfulWidget(
-                                  amount: '',
-                                  beneficiaryName: '',
-                                  currencySign: '',
-                                ),
-                              ),
-                            );
+                            // await Navigator.push(
+                            //   context,
+                            //   PageTransition(
+                            //     type: PageTransitionType.scale,
+                            //     alignment: Alignment.bottomCenter,
+                            //     duration: Duration(milliseconds: 300),
+                            //     reverseDuration: Duration(milliseconds: 300),
+                            //     child: TransferSuscessfulWidget(
+                            //       amount: '',
+                            //       beneficiaryName: '',
+                            //       currencySign: '',
+                            //     ),
+                            //   ),
+                            // );
                           },
                           text: 'Comfirm',
                           options: FFButtonOptions(
