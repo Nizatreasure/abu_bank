@@ -1,3 +1,4 @@
+import 'package:abu_bank/helper/add_pdf.dart';
 import 'package:abu_bank/helper/constants.dart';
 import 'package:abu_bank/providers/account_data_provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -353,6 +354,18 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                             hoverColor: Colors.transparent,
                                             highlightColor: Colors.transparent,
                                             onTap: () async {
+                                              String data = await addPdf(
+                                                amount: '1000',
+                                                beneficiaryAccount: '098765432',
+                                                beneficiaryBank: 'GT Bank',
+                                                beneficiaryName: 'Niza Undie',
+                                                currency: 'NGN',
+                                                remark: 'Good boy',
+                                                senderAccount: '1234567890',
+                                                transactionType: 'Withdrawal',
+                                              );
+                                              print(data);
+                                              return;
                                               await Navigator.push(
                                                 context,
                                                 PageTransition(
