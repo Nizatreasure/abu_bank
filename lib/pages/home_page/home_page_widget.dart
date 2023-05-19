@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-import '/pages/notification/notification_widget.dart';
-import '/pages/saveonline/saveonline_widget.dart';
 import '/pages/transactionreport/transactionreport_widget.dart';
 import '../../helper/mask_string.dart';
 import '../../providers/tab_provider.dart';
@@ -107,35 +105,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               ),
                             ),
                           ],
-                        ),
-                      ],
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          splashColor: Colors.transparent,
-                          focusColor: Colors.transparent,
-                          hoverColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          onTap: () async {
-                            await Navigator.push(
-                              context,
-                              PageTransition(
-                                type: PageTransitionType.scale,
-                                alignment: Alignment.bottomCenter,
-                                duration: Duration(milliseconds: 300),
-                                reverseDuration: Duration(milliseconds: 300),
-                                child: NotificationWidget(),
-                              ),
-                            );
-                          },
-                          child: Icon(
-                            Icons.notification_important,
-                            color: AbuBankTheme.of(context).primary3,
-                            size: 30.0,
-                          ),
                         ),
                       ],
                     ),
@@ -324,7 +293,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                         .spaceEvenly,
                                                 children: [
                                                   SvgPicture.asset(
-                                                    'assets/images/wedraw-icon.svg',
+                                                    'assets/images/withdraw-icon.svg',
                                                     width: 28.0,
                                                     height: 28.0,
                                                     fit: BoxFit.scaleDown,
@@ -352,22 +321,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                             focusColor: Colors.transparent,
                                             hoverColor: Colors.transparent,
                                             highlightColor: Colors.transparent,
-                                            onTap: () async {
-                                              Navigator.push(
-                                                context,
-                                                PageTransition(
-                                                  type:
-                                                      PageTransitionType.scale,
-                                                  alignment:
-                                                      Alignment.bottomCenter,
-                                                  duration: Duration(
-                                                      milliseconds: 300),
-                                                  reverseDuration: Duration(
-                                                      milliseconds: 300),
-                                                  child: SaveonlineWidget(),
-                                                ),
-                                              );
-                                            },
+                                            onTap: () async {},
                                             child: Container(
                                               width: 100.0,
                                               height: 100.0,
