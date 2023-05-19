@@ -6,11 +6,11 @@ import 'package:provider/provider.dart';
 
 import '/pages/chnage_password/chnage_password_widget.dart';
 import '/pages/languagepage/languagepage_widget.dart';
-import '/pages/login_page/login_page_widget.dart';
 import '/pages/notification/notification_widget.dart';
 import '../../theme/abu_bank_theme.dart';
 import '../../theme/abu_bank_util.dart';
 import '../../theme/abu_bank_widgets.dart';
+import '../login_page/login_page_widget.dart';
 import 'settingspage_model.dart';
 
 export 'settingspage_model.dart';
@@ -743,16 +743,44 @@ class _SettingspageWidgetState extends State<SettingspageWidget> {
                 children: [
                   FFButtonWidget(
                     onPressed: () async {
-                      await Navigator.push(
-                        context,
-                        PageTransition(
-                          type: PageTransitionType.scale,
-                          alignment: Alignment.bottomCenter,
-                          duration: Duration(milliseconds: 300),
-                          reverseDuration: Duration(milliseconds: 300),
-                          child: LoginPageWidget(),
-                        ),
-                      );
+                      var confirmDialogResponse = await showDialog<bool>(
+                            context: context,
+                            builder: (alertDialogContext) {
+                              return AlertDialog(
+                                title: Text('Head\'s Up'),
+                                content:
+                                    Text('Are you sure you want to log out?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(
+                                        alertDialogContext, false),
+                                    child: Text('No'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(alertDialogContext, true),
+                                    child: Text('Confirm'),
+                                  ),
+                                ],
+                              );
+                            },
+                          ) ??
+                          false;
+                      if (confirmDialogResponse) {
+                        Provider.of<TabProvider>(context, listen: false)
+                            .changeTab(0);
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          PageTransition(
+                            type: PageTransitionType.scale,
+                            alignment: Alignment.bottomCenter,
+                            duration: Duration(milliseconds: 300),
+                            reverseDuration: Duration(milliseconds: 300),
+                            child: LoginPageWidget(),
+                          ),
+                          (route) => false,
+                        );
+                      }
                     },
                     text: 'Log Out',
                     options: FFButtonOptions(
