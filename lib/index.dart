@@ -1,7 +1,5 @@
 // Export pages
 
-export '/pages/addnewsavings/addnewsavings_widget.dart'
-    show AddnewsavingsWidget;
 export '/pages/chnage_password/chnage_password_widget.dart'
     show ChnagePasswordWidget;
 export '/pages/comfirm_tranfer/comfirm_tranfer_widget.dart'
