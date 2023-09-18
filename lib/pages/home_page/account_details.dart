@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../helper/mask_string.dart';
 import '../../main.dart';
 import '../../theme/abu_bank_theme.dart';
 
@@ -155,7 +156,7 @@ class _AccountSummaryWidgetState extends State<AccountSummaryWidget> {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Text(
-                        'Savings Account: ${widget.accountNumber}',
+                        'Savings Account: ${showBalance ? widget.accountNumber : maskString(widget.accountNumber, visibleDigits: 5)}',
                         style: AbuBankTheme.of(context).titleSmall.override(
                               fontFamily: 'Poppins',
                               color: Colors.white,

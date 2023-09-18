@@ -6,7 +6,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import '/pages/transactionreport/transactionreport_widget.dart';
-import '../../helper/mask_string.dart';
 import '../../providers/tab_provider.dart';
 import '../../theme/abu_bank_theme.dart';
 import '../../theme/abu_bank_util.dart';
@@ -26,8 +25,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   late HomePageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-
-  bool showBalance = false;
 
   @override
   void initState() {
@@ -175,11 +172,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           return AccountSummaryWidget(
                                             accountBalance: double.parse(
                                                 accounts.accounts![i].balance),
-                                            accountNumber: maskString(
-                                              accounts
-                                                  .accounts![i].accountNumber,
-                                              visibleDigits: 5,
-                                            ),
+                                            accountNumber: accounts
+                                                .accounts![i].accountNumber,
                                             index: i,
                                             totalAccounts:
                                                 accounts.accounts!.length,
