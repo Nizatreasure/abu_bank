@@ -78,7 +78,7 @@ class Accounts {
   }
 
   static Future<Map<String, dynamic>> createPin(String pin) async {
-    String url = '$baseUrl/pincode';
+    String url = '$baseUrl/pin-code';
 
     try {
       final response = await http.post(
@@ -127,10 +127,9 @@ class Accounts {
     }
   }
 
-//not
   static Future<Map<String, dynamic>> getBeneficiary(
       {required String bankCode, required String accountNumber}) async {
-    String url = '$baseUrl/api/api.php?action=lookup';
+    String url = '$baseUrl/api/lookup';
 
     try {
       final response = await http.post(

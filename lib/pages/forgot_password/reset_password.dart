@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 
+import '../../helper/custom_loader.dart';
 import '../../theme/abu_bank_theme.dart';
 import '../../theme/abu_bank_widgets.dart';
 
@@ -352,6 +353,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                                   onPressed: () async {
                                     if (_formKey.currentState?.validate() ??
                                         false) {
+                                      CustomOverlay.showOverlay(context);
+
                                       final response =
                                           await Authentication.updatePassword(
                                         email: widget.email,
@@ -360,6 +363,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                                             _confirmPasswordController.text,
                                         token: widget.token,
                                       );
+                                      CustomOverlay.dismissOverlay();
 
                                       if (response['status']) {
                                         Navigator.push(
