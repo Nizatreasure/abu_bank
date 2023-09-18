@@ -1,10 +1,10 @@
 class BankModel {
-  late String id;
+  late int id;
   late String name;
   late String code;
   late String longcode;
   late String slug;
-  late String active;
+  late bool active;
   late String country;
   late String currency;
   late String type;
@@ -21,12 +21,12 @@ class BankModel {
   //     this.type});
 
   BankModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'] ?? '';
+    id = json['id'] ?? 0;
     name = json['name'] ?? '';
     code = json['code'] ?? '';
     longcode = json['longcode'] ?? '';
     slug = json['slug'] ?? '';
-    active = json['active'] ?? '';
+    active = (json['active'] ?? '').toString().toLowerCase() == 'true';
     country = json['country'] ?? '';
     currency = json['currency'] ?? '';
     type = json['type'] ?? '';

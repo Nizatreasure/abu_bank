@@ -24,8 +24,6 @@ class Accounts {
         },
       ).timeout(const Duration(seconds: 90));
 
-      print(jsonDecode(response.body));
-
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         List<AccountModel> accounts = <AccountModel>[];
@@ -59,6 +57,7 @@ class Accounts {
           'Authorization': 'Bearer $token',
         },
       ).timeout(const Duration(seconds: 90));
+      print(jsonDecode(response.body));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -73,6 +72,7 @@ class Accounts {
       }
       throw (Error());
     } catch (_) {
+      print(_);
       return {'status': false, 'message': 'An error occurred'};
     }
   }
@@ -171,7 +171,7 @@ class Accounts {
   }
 
   static Future<Map<String, dynamic>> getTransactionHistory() async {
-    String url = '$baseUrl/api/api.php?action=trans';
+    String url = '$baseUrl/transactions';
 
     try {
       final response = await http.post(
@@ -202,6 +202,7 @@ class Accounts {
       }
       throw (Error());
     } catch (_) {
+      print(_);
       return {'status': false, 'message': 'An error occurred'};
     }
   }

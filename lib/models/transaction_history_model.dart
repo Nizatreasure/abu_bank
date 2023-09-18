@@ -1,5 +1,5 @@
 class TransactionHistoryModel {
-  late String id;
+  late int id;
   late String userId;
   late String accountKey;
   late String type;
@@ -35,7 +35,7 @@ class TransactionHistoryModel {
   //     this.deleted});
 
   TransactionHistoryModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'] ?? '';
+    id = json['id'] ?? 0;
     userId = json['user_id'] ?? '';
     accountKey = json['account_key'] ?? '';
     type = json['type'] == null
