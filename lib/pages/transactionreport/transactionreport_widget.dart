@@ -112,7 +112,7 @@ class _TransactionreportWidgetState extends State<TransactionreportWidget> {
                             'Retry',
                             style: AbuBankTheme.of(context).bodySmall.override(
                                   fontFamily: 'Poppins',
-                                  color: AbuBankTheme.of(context).primaryText,
+                                  color: Colors.white,
                                   fontSize: 16,
                                 ),
                           ),

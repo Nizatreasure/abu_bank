@@ -149,9 +149,7 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
                                                 .bodySmall
                                                 .override(
                                                   fontFamily: 'Poppins',
-                                                  color:
-                                                      AbuBankTheme.of(context)
-                                                          .primaryText,
+                                                  color: Colors.white,
                                                   fontSize: 16,
                                                 ),
                                           )),

@@ -24,6 +24,8 @@ class Accounts {
         },
       ).timeout(const Duration(seconds: 90));
 
+      print(jsonDecode(response.body));
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         List<AccountModel> accounts = <AccountModel>[];
@@ -37,6 +39,7 @@ class Accounts {
       }
       throw (Error());
     } catch (_) {
+      print(_);
       return {'status': false, 'message': 'An error occurred'};
     }
   }

@@ -1,5 +1,6 @@
 class AccountModel {
-  late String id;
+  late int id;
+  late String userId;
   late String type;
   late String currency;
   late String currencySign;
@@ -25,7 +26,8 @@ class AccountModel {
   //     this.status});
 
   AccountModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'] ?? '';
+    id = json['id'] ?? 0;
+    userId = json['user_id'] ?? '';
     type = json['type'] ?? '';
     currency = json['currency'] ?? 'NGN';
     currencySign = json['currency_sign'] ?? '\u20A6';
