@@ -23,14 +23,16 @@ class Authentication {
         final data = jsonDecode(response.body);
 
         token = data['token'];
+        print(data);
 
-        return {'status': true, 'data': LoginModel.fromJson(data['data'])};
+        return {'status': true, 'data': LoginModel.fromJson(data['user'])};
       }
       return {
         'status': false,
         'message': jsonDecode(response.body)['message'] ?? 'An error occurred',
       };
     } catch (_) {
+      print(_);
       return {'status': false, 'message': 'An error occurred'};
     }
   }
@@ -109,9 +111,9 @@ class Authentication {
       final response = await http.post(
         Uri.parse(url),
         body: jsonEncode({
-          "email": email,
-          "otp": otp,
-          "password": password,
+          'email': email,
+          'otp': otp,
+          'password': password,
         }),
         headers: {
           'Content-Type': 'application/json',
@@ -120,12 +122,17 @@ class Authentication {
         },
       ).timeout(const Duration(seconds: 90));
 
+      print(jsonDecode(response.body));
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
         return {'status': true, 'data': data['exists']};
       }
-      throw (Error());
+      return {
+        'status': false,
+        'message': jsonDecode(response.body)['message'] ?? 'An error occurred'
+      };
     } catch (_) {
       return {'status': false, 'message': 'An error occurred'};
     }

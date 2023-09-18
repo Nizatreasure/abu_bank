@@ -27,7 +27,7 @@ class LoginModel {
     username = json['username'] ?? '';
     username = json['display_name'] ?? '';
     role = (json['role_id'] ?? '').toString().toLowerCase();
-    extractFields(json['usermeta'] ?? {});
+    extractFields(json['usermeta'] is Map ? json['usermeta'] ?? {} : {});
   }
 
   void extractFields(Map<String, dynamic> json) {

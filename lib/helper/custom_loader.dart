@@ -10,6 +10,7 @@ class CustomOverlay {
       useRootNavigator: true,
       barrierColor: Colors.transparent,
       context: context,
+      useSafeArea: false,
       builder: (pageContext) {
         _context = pageContext;
         return WillPopScope(
