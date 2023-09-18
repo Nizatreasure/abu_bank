@@ -168,7 +168,7 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'Type your phone number ',
+                                          'Enter your email address ',
                                           style: AbuBankTheme.of(context)
                                               .bodyMedium
                                               .override(
@@ -214,7 +214,7 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                                                       _model.textController1,
                                                   obscureText: false,
                                                   decoration: InputDecoration(
-                                                    labelText: '(+86)',
+                                                    labelText: 'Email',
                                                     enabledBorder:
                                                         UnderlineInputBorder(
                                                       borderSide: BorderSide(
@@ -315,7 +315,7 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          'We texted you a code to verify your \nphone number',
+                                          'A code would be texted to your email',
                                           textAlign: TextAlign.center,
                                           style: AbuBankTheme.of(context)
                                               .bodyMedium

@@ -913,24 +913,17 @@ class _WithdrawFundsWidgetState extends State<WithdrawFundsWidget> {
           loading = true;
         });
 
-        final withdrawResponse = isLocal
-            ? await Accounts.localWithdraw(
-                bankName: bankName,
-                accountNumber: beneficiaryAccount,
-                accountName: beneficiaryName,
-                accountKey: provider.selectedAccount!.accountKey,
-                amount: amount,
-                description: description,
-              )
-            : await Accounts.internationalWithdraw(
-                bankName: bankName,
-                accountNumber: beneficiaryAccount,
-                accountName: beneficiaryName,
-                accountKey: provider.selectedAccount!.accountKey,
-                amount: amount,
-                description: description,
-                swiftCode: swiftCode!,
-              );
+        final withdrawResponse = await Accounts.transaction(
+          bankName: bankName,
+          accountNumber: beneficiaryAccount,
+          accountName: beneficiaryName,
+          accountKey: provider.selectedAccount!.accountKey,
+          amount: amount,
+          description: description,
+          swiftCode: swiftCode,
+          transactionType:
+              isLocal ? 'local_withdrawal' : 'international_withdrawal',
+        );
         setState(() {
           loading = false;
         });

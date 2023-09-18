@@ -896,24 +896,18 @@ class _TransferFundsWidgetState extends State<TransferFundsWidget> {
           loading = true;
         });
 
-        final transferResponse = isLocal
-            ? await Accounts.localTransfer(
-                bankName: bankName,
-                accountNumber: beneficiaryAccount,
-                accountName: beneficiaryName,
-                accountKey: provider.selectedAccount!.accountKey,
-                amount: amount,
-                description: description,
-              )
-            : await Accounts.internationalTransfer(
-                bankName: bankName,
-                accountNumber: beneficiaryAccount,
-                accountName: beneficiaryName,
-                accountKey: provider.selectedAccount!.accountKey,
-                amount: amount,
-                description: description,
-                swiftCode: swiftCode!,
-              );
+        final transferResponse = await Accounts.transaction(
+          bankName: bankName,
+          accountNumber: beneficiaryAccount,
+          accountName: beneficiaryName,
+          accountKey: provider.selectedAccount!.accountKey,
+          amount: amount,
+          description: description,
+          transactionType:
+              isLocal ? 'local_transfer' : 'international_transfer',
+          swiftCode: swiftCode,
+        );
+
         setState(() {
           loading = false;
         });

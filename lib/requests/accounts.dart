@@ -9,7 +9,7 @@ import '../helper/constants.dart';
 
 class Accounts {
   static Future<Map<String, dynamic>> getAccounts() async {
-    String url = '$baseUrl/api/api.php?action=account';
+    String url = '$baseUrl/account';
 
     try {
       final response = await http.post(
@@ -17,24 +17,23 @@ class Accounts {
         body: jsonEncode({
           'user_id': userData!.userId,
         }),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
       ).timeout(const Duration(seconds: 90));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-
-        if (data['status'].toString().toLowerCase() == 'success') {
-          List<AccountModel> accounts = <AccountModel>[];
-          (data['data'] as List).forEach((element) {
-            accounts.add(AccountModel.fromJson(element));
-          });
-          return {
-            'status': true,
-            'data': {'hasSetPin': data['hasSetPin'], 'data': accounts}
-          };
-        } else {
-          return {'status': false, 'message': data['message']};
-        }
+        List<AccountModel> accounts = <AccountModel>[];
+        (data['data'] as List).forEach((element) {
+          accounts.add(AccountModel.fromJson(element));
+        });
+        return {
+          'status': true,
+          'data': {'hasSetPin': data['setPin'], 'data': accounts}
+        };
       }
       throw (Error());
     } catch (_) {
@@ -43,7 +42,7 @@ class Accounts {
   }
 
   static Future<Map<String, dynamic>> getBanks() async {
-    String url = '$baseUrl/api/api.php?action=bank';
+    String url = '$baseUrl/bank';
 
     try {
       final response = await http.post(
@@ -51,23 +50,23 @@ class Accounts {
         body: jsonEncode({
           'user_id': userData!.userId,
         }),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
       ).timeout(const Duration(seconds: 90));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
-        if (data['status'].toString().toLowerCase() == 'success') {
-          List<BankModel> banks = <BankModel>[];
-          (data['data'] as List).forEach((element) {
-            banks.add(BankModel.fromJson(element));
-          });
-          banks.sort(
-              (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
-          return {'status': true, 'data': banks};
-        } else {
-          return {'status': false, 'message': data['message']};
-        }
+        List<BankModel> banks = <BankModel>[];
+        (data['data'] as List).forEach((element) {
+          banks.add(BankModel.fromJson(element));
+        });
+        banks.sort(
+            (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+        return {'status': true, 'data': banks};
       }
       throw (Error());
     } catch (_) {
@@ -76,29 +75,23 @@ class Accounts {
   }
 
   static Future<Map<String, dynamic>> createPin(String pin) async {
-    String url = '$baseUrl/api/api.php?action=pincode';
+    String url = '$baseUrl/pincode';
 
     try {
       final response = await http.post(
         Uri.parse(url),
         body: jsonEncode({
-          'user_id': userData!.userId,
           'pin_code': pin,
         }),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
       ).timeout(const Duration(seconds: 90));
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-
-        if (data['status'].toString().toLowerCase() == 'success') {
-          return {'status': true};
-        } else {
-          return {
-            'status': false,
-            'message': data['data'] ?? 'Failed to set pin'
-          };
-        }
+        return {'status': true};
       }
       throw (Error());
     } catch (_) {
@@ -107,26 +100,23 @@ class Accounts {
   }
 
   static Future<Map<String, dynamic>> verifyPin(String pin) async {
-    String url = '$baseUrl/api/api.php?action=verifyCode';
+    String url = '$baseUrl/verifyCode';
 
     try {
       final response = await http.post(
         Uri.parse(url),
         body: jsonEncode({
-          'user_id': userData!.userId,
           'pin_code': pin,
         }),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
       ).timeout(const Duration(seconds: 90));
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-
-        if (data['status'].toString().toLowerCase() == 'success') {
-          return {'status': true};
-        } else {
-          return {'status': false, 'message': data['data'] ?? 'Incorrect pin'};
-        }
+        return {'status': true};
       }
       throw (Error());
     } catch (_) {
@@ -134,6 +124,7 @@ class Accounts {
     }
   }
 
+//not
   static Future<Map<String, dynamic>> getBeneficiary(
       {required String bankCode, required String accountNumber}) async {
     String url = '$baseUrl/api/api.php?action=lookup';
@@ -145,7 +136,11 @@ class Accounts {
           'bank_code': bankCode,
           'account_number': accountNumber,
         }),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
       ).timeout(const Duration(seconds: 90));
 
       if (response.statusCode == 200) {
@@ -172,187 +167,6 @@ class Accounts {
     }
   }
 
-  static Future<Map<String, dynamic>> localTransfer({
-    required String bankName,
-    required String accountNumber,
-    required String accountName,
-    required String accountKey,
-    required String amount,
-    required String description,
-  }) async {
-    String url = '$baseUrl/api/api.php?action=localTransfer';
-
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        body: jsonEncode({
-          'account_key': accountKey,
-          'amount': amount,
-          'bank_name': bankName,
-          'account_number': accountNumber,
-          'account_name': accountName,
-          'user_id': userData!.userId,
-          'description': description,
-        }),
-        headers: {'Content-Type': 'application/json'},
-      ).timeout(const Duration(seconds: 90));
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-
-        if (data['status'].toString().toLowerCase() == 'success') {
-          return {'status': true};
-        } else {
-          return {
-            'status': false,
-            'message': data['data'] ?? 'Failed to send money'
-          };
-        }
-      }
-      throw (Error());
-    } catch (_) {
-      return {'status': false, 'message': 'An error occurred'};
-    }
-  }
-
-  static Future<Map<String, dynamic>> internationalTransfer({
-    required String bankName,
-    required String accountNumber,
-    required String accountName,
-    required String accountKey,
-    required String amount,
-    required String description,
-    required String swiftCode,
-  }) async {
-    String url = '$baseUrl/api/api.php?action=interTransfer';
-
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        body: jsonEncode({
-          'account_key': accountKey,
-          'amount': amount,
-          'bank_name': bankName,
-          'account_number': accountNumber,
-          'account_name': accountName,
-          'swiftcode:': swiftCode,
-          'user_id': userData!.userId,
-          'description': description,
-        }),
-        headers: {'Content-Type': 'application/json'},
-      ).timeout(const Duration(seconds: 90));
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-
-        print(data);
-        if (data['status'].toString().toLowerCase() == 'success') {
-          return {'status': true};
-        } else {
-          return {
-            'status': false,
-            'message': data['message'] ?? 'Failed to send money'
-          };
-        }
-      }
-      throw (Error());
-    } catch (_) {
-      return {'status': false, 'message': 'An error occurred'};
-    }
-  }
-
-  static Future<Map<String, dynamic>> localWithdraw({
-    required String bankName,
-    required String accountNumber,
-    required String accountName,
-    required String accountKey,
-    required String amount,
-    required String description,
-  }) async {
-    String url = '$baseUrl/api/api.php?action=withdraw';
-
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        body: jsonEncode({
-          'account_key': accountKey,
-          'amount': amount,
-          'bank_name': bankName,
-          'account_number': accountNumber,
-          'account_name': accountName,
-          'user_id': userData!.userId,
-          'description': description,
-        }),
-        headers: {'Content-Type': 'application/json'},
-      ).timeout(const Duration(seconds: 90));
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        print(data);
-
-        if (data['status'].toString().toLowerCase() == 'success') {
-          return {'status': true};
-        } else {
-          return {
-            'status': false,
-            'message': data['message'] ?? 'Withdrawal failed'
-          };
-        }
-      }
-      throw (Error());
-    } catch (_) {
-      return {'status': false, 'message': 'An error occurred'};
-    }
-  }
-
-  static Future<Map<String, dynamic>> internationalWithdraw({
-    required String bankName,
-    required String accountNumber,
-    required String accountName,
-    required String accountKey,
-    required String amount,
-    required String description,
-    required String swiftCode,
-  }) async {
-    String url = '$baseUrl/api/api.php?action=interWithdraw';
-
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        body: jsonEncode({
-          'account_key': accountKey,
-          'amount': amount,
-          'bank_name': bankName,
-          'account_number': accountNumber,
-          'account_name': accountName,
-          'sort_code': swiftCode,
-          'user_id': userData!.userId,
-          'description': description,
-        }),
-        headers: {'Content-Type': 'application/json'},
-      ).timeout(const Duration(seconds: 90));
-
-      print(response.statusCode);
-      print(response.reasonPhrase);
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-
-        print(data);
-        if (data['status'].toString().toLowerCase() == 'success') {
-          return {'status': true};
-        } else {
-          return {
-            'status': false,
-            'message': data['message'] ?? 'Withdrawal failed'
-          };
-        }
-      }
-      throw (Error());
-    } catch (_) {
-      return {'status': false, 'message': 'An error occurred'};
-    }
-  }
-
   static Future<Map<String, dynamic>> getTransactionHistory() async {
     String url = '$baseUrl/api/api.php?action=trans';
 
@@ -362,7 +176,11 @@ class Accounts {
         body: jsonEncode({
           'user_id': userData!.userId,
         }),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
       ).timeout(const Duration(seconds: 90));
 
       if (response.statusCode == 200) {
@@ -377,6 +195,59 @@ class Accounts {
           return {'status': true, 'data': history};
         } else {
           return {'status': false, 'message': data['message']};
+        }
+      }
+      throw (Error());
+    } catch (_) {
+      return {'status': false, 'message': 'An error occurred'};
+    }
+  }
+
+  static Future<Map<String, dynamic>> transaction({
+    required String bankName,
+    required String accountNumber,
+    required String accountName,
+    required String accountKey,
+    required String amount,
+    required String description,
+    String? swiftCode,
+    String type = 'debit',
+    required String transactionType,
+  }) async {
+    String url = '$baseUrl/createTransaction';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode({
+          'account_key': accountKey,
+          'amount': amount,
+          'bank_name': bankName,
+          'account_number': accountNumber,
+          'account_name': accountName,
+          if (swiftCode != null) 'swiftcode:': swiftCode,
+          'description': description,
+          'trans_type': transactionType,
+          'type': type,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      ).timeout(const Duration(seconds: 90));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        print(data);
+        if (data['status'].toString().toLowerCase() == 'success') {
+          return {'status': true};
+        } else {
+          return {
+            'status': false,
+            'message': data['message'] ?? 'Failed to send money'
+          };
         }
       }
       throw (Error());

@@ -1,5 +1,6 @@
 import 'package:abu_bank/helper/constants.dart';
 import 'package:abu_bank/models/login_model.dart';
+import 'package:abu_bank/pages/forgot_password/email_exists.dart';
 import 'package:abu_bank/providers/account_data_provider.dart';
 import 'package:abu_bank/requests/authentication.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,6 @@ import 'package:local_auth_android/local_auth_android.dart';
 import 'package:provider/provider.dart';
 
 import '/main.dart';
-import '/pages/forgot_password/forgot_password_widget.dart';
 import '/pages/welcome_page/welcome_page_widget.dart';
 import '../../theme/abu_bank_theme.dart';
 import '../../theme/abu_bank_util.dart';
@@ -395,7 +395,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         duration: Duration(milliseconds: 300),
                                         reverseDuration:
                                             Duration(milliseconds: 300),
-                                        child: ForgotPasswordWidget(),
+                                        child: EmailExists(),
                                       ),
                                     );
                                   },

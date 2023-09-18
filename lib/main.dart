@@ -3,6 +3,7 @@ import 'package:abu_bank/providers/tab_provider.dart';
 import 'package:abu_bank/theme/abu_bank_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await AbuBankTheme.initialize();
+
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle.dark.copyWith(
+      statusBarColor: Colors.transparent,
+      systemNavigationBarColor: Colors.black,
+    ),
+  );
 
   runApp(MyApp());
 }
