@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 
 import '/main.dart';
 import '/pages/welcome_page/welcome_page_widget.dart';
+import '../../helper/custom_loader.dart';
 import '../../theme/abu_bank_theme.dart';
 import '../../theme/abu_bank_util.dart';
 import '../../theme/abu_bank_widgets.dart';
@@ -541,9 +542,13 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
   Future<void> _signIn(
       {required String email, required String password}) async {
     if (email.isEmpty || password.isEmpty) return;
+    CustomOverlay.showOverlay(context);
 
     final response =
         await Authentication.login(email: email, password: password);
+
+    CustomOverlay.dismissOverlay();
+
     if (response['status']) {
       await storage.write(key: 'password', value: password);
       await storage.write(key: 'email', value: email);

@@ -4,8 +4,6 @@ export '/pages/chnage_password/chnage_password_widget.dart'
     show ChnagePasswordWidget;
 export '/pages/comfirm_tranfer/comfirm_tranfer_widget.dart'
     show ComfirmTranferWidget;
-export '/pages/forgot_password/forgot_password_widget.dart'
-    show ForgotPasswordWidget;
 export '/pages/home_page/home_page_widget.dart' show HomePageWidget;
 export '/pages/interestrate/interestrate_widget.dart' show InterestrateWidget;
 export '/pages/languagepage/languagepage_widget.dart' show LanguagepageWidget;

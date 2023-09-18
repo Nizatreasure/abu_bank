@@ -121,7 +121,7 @@ class Accounts {
       if (response.statusCode == 200) {
         return {'status': true};
       }
-      throw (Error());
+      return {'status': false, 'message': 'Incorrect pin'};
     } catch (_) {
       return {'status': false, 'message': 'An error occurred'};
     }
@@ -129,7 +129,7 @@ class Accounts {
 
   static Future<Map<String, dynamic>> getBeneficiary(
       {required String bankCode, required String accountNumber}) async {
-    String url = '$baseUrl/api/lookup';
+    String url = '$baseUrl/lookup';
 
     try {
       final response = await http.post(
@@ -145,23 +145,16 @@ class Accounts {
         },
       ).timeout(const Duration(seconds: 90));
 
+      print(jsonDecode(response.body));
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         print(data);
-        if (data['status'].toString().toLowerCase() == 'success') {
-          if (data['data']['status'].toString().toLowerCase() == 'error') {
-            return {
-              'status': false,
-              'message': 'Could not resolve beneficiary'
-            };
-          }
+
+        if (data['data']['status'].toString().toLowerCase() == 'true') {
           return {'status': true, 'data': data['data']['account_name']};
-        } else {
-          return {
-            'status': false,
-            'message': data['data'] ?? 'Could not resolve beneficiary'
-          };
         }
+        return {'status': false, 'message': 'Could not resolve beneficiary'};
       }
       throw (Error());
     } catch (_) {
@@ -188,16 +181,12 @@ class Accounts {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
-        if (data['status'].toString().toLowerCase() == 'success') {
-          List<TransactionHistoryModel> history = <TransactionHistoryModel>[];
-          (data['data'] as List).forEach((element) {
-            history.add(TransactionHistoryModel.fromJson(element));
-          });
-          history.sort((a, b) => b.id.compareTo(a.id));
-          return {'status': true, 'data': history};
-        } else {
-          return {'status': false, 'message': data['message']};
-        }
+        List<TransactionHistoryModel> history = <TransactionHistoryModel>[];
+        (data['data'] as List).forEach((element) {
+          history.add(TransactionHistoryModel.fromJson(element));
+        });
+        history.sort((a, b) => b.id.compareTo(a.id));
+        return {'status': true, 'data': history};
       }
       throw (Error());
     } catch (_) {
@@ -229,7 +218,7 @@ class Accounts {
           'account_number': accountNumber,
           'account_name': accountName,
           if (swiftCode != null) 'swiftcode:': swiftCode,
-          'description': description,
+          'description': description.isEmpty ? transactionType : description,
           'trans_type': transactionType,
           'type': type,
         }),
@@ -240,18 +229,10 @@ class Accounts {
         },
       ).timeout(const Duration(seconds: 90));
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+      print(jsonDecode(response.body));
 
-        print(data);
-        if (data['status'].toString().toLowerCase() == 'success') {
-          return {'status': true};
-        } else {
-          return {
-            'status': false,
-            'message': data['message'] ?? 'Failed to send money'
-          };
-        }
+      if (response.statusCode == 200) {
+        return {'status': true};
       }
       throw (Error());
     } catch (_) {
